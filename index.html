@@ -74,7 +74,7 @@ button{font:inherit}
 .actions button{padding:14px;border-radius:13px;border:0;font-weight:850;cursor:pointer}
 .primary{background:#fff;color:#111}
 .secondary{background:#181c25;color:#fff;border:1px solid #303746!important}
-.new-record{margin-top:8px;color:#f6d889;font-weight:900}.hard-only-hide{display:none!important}
+.new-record{margin-top:8px;color:#f6d889;font-weight:900}.hard-only-hide{display:none!important}.challenge-ladder{margin:18px 0 8px;padding:16px;background:#101218;border:1px solid #282e3a;border-radius:18px}.challenge-ladder h3{margin:0 0 12px;font-size:.95rem;color:#c5cad5}.ladder{display:grid;grid-template-columns:repeat(5,1fr);gap:7px}.milestone{padding:10px 6px;text-align:center;border-radius:12px;border:1px solid #2b313d;background:#151820;color:#7f8797;font-size:.78rem}.milestone b{display:block;color:#c8ceda;font-size:1.03rem;margin-bottom:2px}.milestone.done{background:#12251a;border-color:#2d6645;color:#b9eac9}.milestone.done b{color:#e2ffeb}.milestone.current{border-color:#725d27;box-shadow:inset 0 0 0 1px #725d27;color:#f3dda2}.next-goal{margin-top:12px;font-size:.88rem;color:#aeb5c2;text-align:center}.achievement-list{display:grid;gap:8px;margin-top:14px}.achievement{padding:11px 12px;border-radius:12px;background:#11141a;border:1px solid #272c37;text-align:left;font-size:.9rem}.achievement.unlocked{border-color:#4f6633;background:#152016}.achievement strong{display:block;margin-bottom:2px}@media(max-width:700px){.ladder{grid-template-columns:repeat(5,minmax(55px,1fr));overflow-x:auto}}
 @media(max-width:700px){
   .wrap{padding:14px 13px 36px}
   .hero{padding-top:28px}
@@ -112,6 +112,7 @@ button{font:inherit}
   </div>
 
   <div class="record" id="record"></div>
+  <div class="challenge-ladder" id="challengeLadder"></div>
 
   <div class="modes">
     <button class="mode hard" onclick="start('hard')">
@@ -169,6 +170,7 @@ button{font:inherit}
       <div><small>今回の挑戦</small><b id="attemptNo"></b></div>
     </div>
 
+    <div class="achievement-list" id="achievementList"></div>
     <div class="death" id="deathReason"></div>
 
     <div class="actions">
@@ -316,8 +318,41 @@ function show(id){
 
 function tries(){return Number(localStorage.getItem("iflife_tries")||0);}
 function bestHard(){return Number(localStorage.getItem("iflife_best_hard")||0);}
+var hardMilestones=[
+  {age:20,label:"生存者",icon:"🩹"},
+  {age:30,label:"しぶとい",icon:"🪖"},
+  {age:50,label:"生還者",icon:"🔥"},
+  {age:80,label:"ほぼ不死身",icon:"🏆"},
+  {age:100,label:"伝説",icon:"👑"}
+];
+
+function renderChallengeLadder(){
+  var box=document.getElementById("challengeLadder");
+  if(!box)return;
+  var best=bestHard();
+  var next=hardMilestones.find(function(m){return best<m.age;});
+  var cards=hardMilestones.map(function(m){
+    var done=best>=m.age;
+    var current=next&&next.age===m.age;
+    return '<div class="milestone '+(done?'done ':'')+(current?'current':'')+'"><b>'+m.age+'歳</b>'+(done?'達成 ✓':m.label)+'</div>';
+  }).join("");
+  var goal=next?('次の目標：<b>'+next.age+'歳</b>まで生き残る'):'全チャレンジ達成。あなたはもう人間ではない。';
+  box.innerHTML='<h3>☠ 超絶過酷 サバイバルチャレンジ</h3><div class="ladder">'+cards+'</div><div class="next-goal">'+goal+'</div>';
+}
+
+function unlockedAchievements(age){
+  var list=[];
+  hardMilestones.forEach(function(m){
+    if(age>=m.age)list.push(m.icon+' '+m.age+'歳突破「'+m.label+'」');
+  });
+  if(age<5)list.push('💀 5歳未満「人生RTA」');
+  if(s&&s.count>=10)list.push('🧱 10イベント突破「まだ死なない」');
+  if(s&&s.life===0)list.push('❤️‍🔥 ライフ0「力尽きた」');
+  return list;
+}
 
 function updateRecord(){
+  renderChallengeLadder();
   var e=document.getElementById("record");
   var t=tries();
   var b=bestHard();
@@ -519,7 +554,11 @@ function titleFor(a){
 }
 
 function badgeFor(){
-  if(s.mode==="hard"&&s.age>=80)return"🏆 SURVIVOR LEGEND";
+  if(s.mode==="hard"&&s.age>=100)return"👑 100歳：LEGEND";
+  if(s.mode==="hard"&&s.age>=80)return"🏆 80歳：SURVIVOR LEGEND";
+  if(s.mode==="hard"&&s.age>=50)return"🔥 50歳：生還者";
+  if(s.mode==="hard"&&s.age>=30)return"🪖 30歳：しぶとい";
+  if(s.mode==="hard"&&s.age>=20)return"🩹 20歳：生存者";
   if(s.mode!=="hard"&&s.maxMoney>=1000000000)return"👑 超富豪";
   if(s.age<10)return"💀 スピードラン";
   return"🎲 ONE LIFE";
@@ -547,6 +586,13 @@ function finish(){
   document.getElementById("newRecord").textContent=isNew?"NEW RECORD：超絶過酷の自己ベスト更新！":"";
   document.getElementById("badge").textContent=badgeFor();
   document.getElementById("deathReason").textContent="最期："+(s.reason||"人生を終えた");
+  var ach=document.getElementById("achievementList");
+  if(s.mode==="hard"){
+    var items=unlockedAchievements(s.age);
+    ach.innerHTML=items.length?items.map(function(x){return '<div class="achievement unlocked"><strong>実績解除</strong>'+x+'</div>';}).join(""):'';
+  }else{
+    ach.innerHTML="";
+  }
 
   updateRecord();
 }
@@ -583,6 +629,7 @@ async function copyResult(){
 }
 
 updateRecord();
+renderChallengeLadder();
 </script>
 </body>
 </html>
