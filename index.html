@@ -2,141 +2,524 @@
 <html lang="ja">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>IF LIFE</title>
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#090a0d">
+<title>IF LIFE | 人生は選べても、結果は選べない。</title>
 <style>
-:root{color-scheme:dark;font-family:system-ui,-apple-system,"Segoe UI",sans-serif}
-*{box-sizing:border-box} body{margin:0;background:#090a0d;color:#fff;min-height:100vh}
-.wrap{max-width:900px;margin:auto;padding:24px}.hero{text-align:center;padding:36px 0 20px}
-h1{font-size:clamp(40px,9vw,78px);margin:0}.sub{opacity:.72;margin-top:8px}
-.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:20px 0}
-.stat,.card,.panel{background:#12141a;border:1px solid #252936;border-radius:18px;padding:18px}
-.stat b{display:block;font-size:1.35rem}.modes{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
-button{font:inherit}.mode{cursor:pointer;text-align:left;border:1px solid #2d3342;background:#14171e;color:#fff;border-radius:18px;padding:20px;min-height:160px}
-.mode:hover{transform:translateY(-2px)}.mode h3{margin:0 0 8px}.hard{border-color:#6b2432}.win{border-color:#70591e}.random{border-color:#314f71}
-.hidden{display:none!important}.topbar{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:14px}
-.pills{display:flex;gap:8px;flex-wrap:wrap}.pill{background:#171b24;border:1px solid #2a3140;border-radius:999px;padding:8px 11px;font-size:.9rem}
-.event{font-size:1.3rem;line-height:1.55;margin:18px 0}.choices{display:grid;gap:10px}
-.choice{width:100%;text-align:left;padding:16px;border-radius:14px;border:1px solid #32394a;background:#181c25;color:#fff;cursor:pointer}
-.choice:hover{background:#202633}.log{margin-top:16px;display:grid;gap:8px;max-height:280px;overflow:auto}.log div{padding:10px 12px;background:#101219;border-radius:12px;font-size:.92rem;opacity:.9}
-.result h2{font-size:2rem;margin-bottom:4px}.big{font-size:3rem;font-weight:900}.rare{font-size:1.15rem;font-weight:800;margin:10px 0}.actions{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-top:18px}
-.actions button{padding:14px;border-radius:13px;border:0;font-weight:800;cursor:pointer}.primary{background:#fff;color:#111}.secondary{background:#1a1e28;color:#fff;border:1px solid #31394a!important}
-.attempts{text-align:center;color:#8f96a6;font-size:.9rem;margin:4px 0 18px}.outcome{margin-top:14px;padding:14px 15px;border-radius:14px;font-weight:750;line-height:1.5}.outcome.good{background:#10271c;border:1px solid #285e40;color:#cbf5da}.outcome.bad{background:#2b1117;border:1px solid #6f2b3a;color:#ffd0d9}.outcome.neutral{background:#181b22;border:1px solid #343946;color:#e0e3ea}.continue{margin-top:10px;width:100%;padding:14px;border:0;border-radius:14px;background:#fff;color:#111;font-weight:900;cursor:pointer}.badge{display:inline-block;margin:8px 0 2px;border:1px solid #4a4054;border-radius:999px;padding:7px 12px;color:#e4d9eb;font-weight:800;font-size:.85rem}@media(max-width:700px){.stats,.modes{grid-template-columns:1fr}.actions{grid-template-columns:1fr}.wrap{padding:16px}}
+:root{color-scheme:dark;font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif;--bg:#090a0d;--panel:#12141a;--line:#272c38;--muted:#969dac}
+*{box-sizing:border-box}
+body{margin:0;background:radial-gradient(circle at 50% -15%,#282031 0,#0d0e12 36%,#090a0d 72%);color:#fff;min-height:100vh}
+button{font:inherit}
+.wrap{max-width:920px;margin:auto;padding:20px 18px 48px}
+.hidden{display:none!important}
+.hero{text-align:center;padding:42px 0 18px}
+.beta{display:inline-block;margin-bottom:15px;padding:5px 10px;border-radius:999px;border:1px solid #363b48;color:#aab1bf;font-size:.72rem;font-weight:800;letter-spacing:.08em}
+.brand{font-size:clamp(48px,10vw,88px);font-weight:950;letter-spacing:-.07em;line-height:.9}
+.sub{color:#b0b6c2;margin-top:14px;font-weight:700}
+.challenge{margin:24px auto 0;max-width:650px;background:linear-gradient(135deg,rgba(121,28,42,.24),rgba(74,30,89,.18));border:1px solid #64313c;border-radius:20px;padding:17px 18px;text-align:left}
+.challenge strong{font-size:1.15rem}
+.challenge small{display:block;color:#c7bcc1;margin-top:5px;line-height:1.45}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:18px 0}
+.stat,.card,.panel{background:rgba(18,20,26,.94);border:1px solid var(--line);border-radius:18px}
+.stat{padding:17px}
+.stat small{color:var(--muted)}
+.stat b{display:block;font-size:1.45rem;margin-top:5px}
+.howto{display:flex;justify-content:center;gap:9px;flex-wrap:wrap;color:#8e95a5;font-size:.84rem;margin:8px 0 18px}
+.howto span{padding:7px 10px;background:#111319;border:1px solid #232832;border-radius:999px}
+.record{text-align:center;color:#9da4b2;font-size:.9rem;margin-bottom:18px;min-height:20px}
+.modes{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.mode{position:relative;overflow:hidden;cursor:pointer;text-align:left;border:1px solid #2d3342;background:#14171e;color:#fff;border-radius:20px;padding:20px;min-height:182px;transition:.16s transform,.16s background,.16s border-color}
+.mode:hover{transform:translateY(-3px);background:#191c24}
+.mode:active{transform:scale(.99)}
+.mode h3{font-size:1.08rem;margin:0 0 9px}
+.mode p{color:#b5bbc8;line-height:1.5;margin:0}
+.mode .tag{position:absolute;right:14px;bottom:13px;font-size:.72rem;color:#8b92a2}
+.hard{border-color:#742d3a}
+.random{border-color:#345675}
+.win{border-color:#756124}
+.topbar{display:flex;justify-content:space-between;align-items:center;gap:10px;margin:8px 0 14px}
+.back{padding:10px 13px;border-radius:12px;background:#151821;color:#fff;border:1px solid #2c3240;cursor:pointer}
+.mode-label{font-weight:850}
+.pills{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:12px}
+.pill{background:#151821;border:1px solid #292f3b;border-radius:14px;padding:10px 11px;font-size:.82rem;color:#aeb5c5}
+.pill b{display:block;color:#fff;font-size:1.05rem;margin-top:2px}
+.panel{padding:20px;min-height:275px;display:flex;flex-direction:column;justify-content:center}
+.age-label{font-size:.78rem;color:#8991a2;font-weight:800;letter-spacing:.07em}
+.event{font-size:clamp(1.3rem,4vw,1.7rem);font-weight:850;line-height:1.45;margin:9px 0 19px;letter-spacing:-.02em}
+.choices{display:grid;gap:10px}
+.choice{width:100%;text-align:left;padding:16px;border-radius:14px;border:1px solid #343b4a;background:#181c25;color:#fff;cursor:pointer;transition:.13s}
+.choice:hover{background:#222733;border-color:#525d73}
+.choice:active{transform:scale(.99)}
+.choice:disabled{opacity:.45;cursor:default}
+.outcome{margin-top:14px;padding:15px 16px;border-radius:14px;font-weight:760;line-height:1.5}
+.outcome.good{background:#10271c;border:1px solid #285e40;color:#cbf5da}
+.outcome.bad{background:#2b1117;border:1px solid #6f2b3a;color:#ffd0d9}
+.outcome.neutral{background:#181b22;border:1px solid #343946;color:#e0e3ea}
+.continue{margin-top:11px;width:100%;padding:15px;border:0;border-radius:14px;background:#fff;color:#111;font-weight:900;cursor:pointer}
+.log-title{font-size:.78rem;color:#777f90;font-weight:800;margin:18px 0 8px}
+.log{display:grid;gap:7px;max-height:240px;overflow:auto}
+.log div{padding:10px 12px;background:#0f1116;border:1px solid #1f232d;border-radius:11px;font-size:.87rem;color:#b6bdca}
+.result-card{text-align:center;background:linear-gradient(165deg,#151820,#101116);border:1px solid #2b303d;border-radius:22px;padding:26px}
+.result-mode{color:#9ca3b4;font-weight:850}
+.result-title{font-size:1.02rem;color:#cbd0dc;margin-top:14px}
+.big{font-size:clamp(3.6rem,16vw,6.6rem);font-weight:950;letter-spacing:-.07em;line-height:1;margin-top:3px}
+.rank{margin:13px auto 0;padding:11px 14px;max-width:450px;border-radius:14px;background:#171a22;border:1px solid #303644;font-weight:900}
+.badge{display:inline-block;margin-top:12px;border:1px solid #4a4054;border-radius:999px;padding:8px 13px;color:#e4d9eb;font-weight:850;font-size:.86rem}
+.summary{display:grid;grid-template-columns:repeat(2,1fr);gap:9px;margin-top:15px}
+.summary div{background:#101219;border:1px solid #252a35;border-radius:14px;padding:13px}
+.summary small{display:block;color:#858d9d}
+.summary b{display:block;margin-top:4px;font-size:1.08rem}
+.death{margin-top:15px;padding:13px 14px;border-radius:14px;background:#1d1014;color:#f5c3cd;border:1px solid #54242f;line-height:1.5}
+.actions{display:grid;grid-template-columns:repeat(2,1fr);gap:9px;margin-top:18px}
+.actions button{padding:14px;border-radius:13px;border:0;font-weight:850;cursor:pointer}
+.primary{background:#fff;color:#111}
+.secondary{background:#181c25;color:#fff;border:1px solid #303746!important}
+.new-record{margin-top:8px;color:#f6d889;font-weight:900}
+@media(max-width:700px){
+  .wrap{padding:14px 13px 36px}
+  .hero{padding-top:28px}
+  .stats,.modes{grid-template-columns:1fr}
+  .pills{grid-template-columns:repeat(2,1fr);position:sticky;top:0;z-index:5;background:#090a0d;padding:8px 0;margin-bottom:6px}
+  .actions{grid-template-columns:1fr}
+  .panel{padding:17px}
+  .mode{min-height:auto}
+}
 </style>
 </head>
 <body>
 <main class="wrap">
 <section id="home">
- <div class="hero"><h1>IF LIFE</h1><div class="sub">人生は選べても、結果は選べない。</div></div>
- <div class="stats">
-  <div class="stat"><small>超絶過酷 平均寿命</small><b>20.1歳</b></div>
-  <div class="stat"><small>80歳まで生存</small><b>0.63%</b></div>
-  <div class="stat"><small>資産1億円到達</small><b>0.40%</b></div>
- </div>
- <div class="attempts" id="attempts"></div>\n <div class="modes">
-  <button class="mode hard" onclick="start('hard')"><h3>☠ 超絶過酷人生</h3><p>平均寿命約20歳。理不尽な世界でどこまで生き残れる？</p></button>
-  <button class="mode random" onclick="start('random')"><h3>🎲 完全ランダム人生</h3><p>良いことも悪いことも、何が起きるか分からない。</p></button>
-  <button class="mode win" onclick="start('win')"><h3>👑 超絶勝ち組人生</h3><p>恵まれた人生。それでも最後まで順調とは限らない。</p></button>
- </div>
+  <div class="hero">
+    <div class="beta">PUBLIC BETA</div>
+    <div class="brand">IF LIFE</div>
+    <div class="sub">人生は選べても、結果は選べない。</div>
+    <div class="challenge">
+      <strong>☠ 平均寿命20歳。80歳まで生き残れる？</strong>
+      <small>超絶過酷人生の基準シミュレーションでは、80歳到達は約0.63%。選択肢も、その結果もランダム。</small>
+    </div>
+  </div>
+
+  <div class="stats">
+    <div class="stat"><small>超絶過酷 平均寿命</small><b>20.1歳</b></div>
+    <div class="stat"><small>80歳まで生存</small><b>0.63%</b></div>
+    <div class="stat"><small>資産1億円到達</small><b>0.40%</b></div>
+  </div>
+
+  <div class="howto">
+    <span>① モードを選ぶ</span>
+    <span>② 出た選択肢を選ぶ</span>
+    <span>③ 結果は運任せ</span>
+  </div>
+
+  <div class="record" id="record"></div>
+
+  <div class="modes">
+    <button class="mode hard" onclick="start('hard')">
+      <h3>☠ 超絶過酷人生</h3>
+      <p>宇宙規模の災害、意味不明な事故、突然の大幸運。とにかく生き残れ。</p>
+      <span class="tag">最初はこれがおすすめ</span>
+    </button>
+    <button class="mode random" onclick="start('random')">
+      <h3>🎲 完全ランダム人生</h3>
+      <p>良いことも悪いことも均等寄り。普通からカオスまで何でもあり。</p>
+    </button>
+    <button class="mode win" onclick="start('win')">
+      <h3>👑 超絶勝ち組人生</h3>
+      <p>かなり恵まれた人生。それでも結果までは保証されない。</p>
+    </button>
+  </div>
 </section>
 
 <section id="game" class="hidden">
- <div class="topbar"><button class="secondary" onclick="goHome()">← 戻る</button><div id="modeName"></div></div>
- <div class="pills">
-  <div class="pill">年齢 <b id="age">0</b>歳</div>
-  <div class="pill">資産 <b id="money">0円</b></div>
-  <div class="pill">健康 <b id="health">100</b></div>
-  <div class="pill">幸福 <b id="happy">50</b></div>
- </div>
- <div class="panel">
-  <div id="event" class="event"></div>
-  <div id="choices" class="choices"></div>
- </div>
- <div id="log" class="log"></div>
+  <div class="topbar">
+    <button class="back" onclick="goHome()">← 終了</button>
+    <div class="mode-label" id="modeName"></div>
+  </div>
+
+  <div class="pills">
+    <div class="pill">年齢<b><span id="age">0</span>歳</b></div>
+    <div class="pill">資産<b id="money">0円</b></div>
+    <div class="pill">健康<b id="health">100</b></div>
+    <div class="pill">幸福<b id="happy">50</b></div>
+  </div>
+
+  <div class="panel">
+    <div class="age-label" id="ageLabel"></div>
+    <div id="event" class="event"></div>
+    <div id="choices" class="choices"></div>
+    <div id="outcomeWrap"></div>
+  </div>
+
+  <div class="log-title">これまでの人生</div>
+  <div id="log" class="log"></div>
 </section>
 
-<section id="result" class="hidden result">
- <div class="card">
-  <div id="resultMode"></div><h2>あなたの人生</h2>
-  <div class="big"><span id="deathAge"></span>歳</div>
-  <p>最大資産 <b id="maxMoney"></b></p>
-  <p>最高幸福度 <b id="maxHappy"></b></p>
-  <div class="rare" id="rare"></div>
-  <p id="deathReason"></p>
-  <div class="actions">
-    <button class="primary" onclick="retry()">もう一度この人生</button>
-    <button class="secondary" onclick="share()">共有する</button>
-    <button class="secondary" onclick="copyText()">シェア文をコピー</button>
-    <button class="secondary" onclick="goHome()">別のモードを選ぶ</button>
+<section id="result" class="hidden">
+  <div class="result-card">
+    <div class="result-mode" id="resultMode"></div>
+    <div class="result-title" id="resultTitle"></div>
+    <div class="big"><span id="deathAge"></span><small style="font-size:.32em;letter-spacing:0">歳</small></div>
+    <div class="rank" id="rare"></div>
+    <div id="newRecord" class="new-record"></div>
+    <div class="badge" id="badge"></div>
+
+    <div class="summary">
+      <div><small>最大資産</small><b id="maxMoney"></b></div>
+      <div><small>最高幸福度</small><b id="maxHappy"></b></div>
+      <div><small>人生イベント</small><b id="eventCount"></b></div>
+      <div><small>今回の挑戦</small><b id="attemptNo"></b></div>
+    </div>
+
+    <div class="death" id="deathReason"></div>
+
+    <div class="actions">
+      <button class="primary" onclick="retry()">同じモードでもう一度</button>
+      <button class="secondary" onclick="shareResult()">結果を共有</button>
+      <button class="secondary" onclick="copyResult()">シェア文をコピー</button>
+      <button class="secondary" onclick="goHome()">別の人生を選ぶ</button>
+    </div>
   </div>
- </div>
 </section>
 </main>
+
 <script>
-let s=null;
-const names={hard:"☠ 超絶過酷人生",random:"🎲 完全ランダム人生",win:"👑 超絶勝ち組人生"};
-const chaos=[
- ["地球の重力が突然1億倍になった。",["全力で耐える","地下へ逃げる","受け入れる"],["奇跡的に一瞬で元に戻った","建物ごと潰された","あなたは押しつぶされた"]],
- ["30mの巨大ハトが街に現れた。",["走って逃げる","パンを投げる","戦う"],["なぜか懐かれた","家を失った","巨大ハトについばまれた"]],
- ["月が急接近している。",["避難する","空を見る","仕事へ行く"],["ぎりぎり逸れた","街が壊滅した","月との衝突で消滅した"]],
- ["宇宙人が突然あなたを代表者に指名した。",["交渉する","逃げる","歓迎する"],["100億円相当の技術をもらった","地球外へ連れて行かれた","なぜか地球が救われた"]],
- ["世界中の酸素濃度が半分になった。",["酸素を探す","家で待つ","走る"],["数日で元に戻った","重体になった","酸欠で倒れた"]],
- ["人類が突然5cmになった。",["安全な場所を探す","猫から逃げる","冒険する"],["小さな文明を築いた","掃除機に吸われた","猫に追い回された"]]
+var s = null;
+
+var names = {
+  hard:"☠ 超絶過酷人生",
+  random:"🎲 完全ランダム人生",
+  win:"👑 超絶勝ち組人生"
+};
+
+var hardDeaths = [
+  "空から落ちてきた金庫の下敷きになった",
+  "道路が突然消滅し、そのまま落下した",
+  "家にピンポイントで隕石が落ちた",
+  "原因不明の突風で宇宙まで飛ばされた",
+  "巨大ハトについばまれた",
+  "謎の感染症にかかった",
+  "雷がなぜか3回連続で直撃した",
+  "突然開いた地割れに飲み込まれた",
+  "自動販売機が爆発した",
+  "眠っている間に町ごと消滅した"
 ];
-const normal=[
- ["進路を決める時期になった。",["大学へ進学","就職する","旅に出る"]],
- ["友人から起業に誘われた。",["起業する","断る","副業で参加"]],
- ["投資の話が舞い込んだ。",["投資する","見送る","少額だけ試す"]],
- ["気になる人と出会った。",["話しかける","様子を見る","告白する"]],
- ["転職の誘いが来た。",["転職する","残る","独立する"]],
- ["健康診断で生活改善を勧められた。",["運動を始める","食生活を改善","何もしない"]],
- ["突然SNSで投稿がバズった。",["発信を続ける","仕事に活かす","気にしない"]],
- ["遠方への移住話が出た。",["移住する","断る","しばらく試す"]]
+
+var chaos = [
+  ["地球の重力が突然1億倍になった。",["机の下に隠れる","気合いで耐える","地下へ逃げる"],["なぜか3秒で元に戻った","建物ごと押し潰された","一瞬で押しつぶされた"]],
+  ["30mの巨大ハトが街に現れた。",["パンを投げる","全力で逃げる","ハトに乗ろうとする"],["なぜか懐かれた","街ごと巣にされた","巨大ハトについばまれた"]],
+  ["月が地球に向かって落ちてきている。",["避難所へ行く","月を見届ける","普段通り過ごす"],["直前で軌道が逸れた","世界の半分が壊滅した","月との衝突で消滅した"]],
+  ["宇宙人があなたを人類代表に指名した。",["交渉する","歓迎する","逃げる"],["100億円相当の技術をもらった","宇宙人の王になった","地球外へ連れて行かれた"]],
+  ["世界中の酸素濃度が突然半分になった。",["酸素ボンベを探す","寝て待つ","全力疾走する"],["数日で元に戻った","重体になった","酸欠で倒れた"]],
+  ["全人類が突然5cmになった。",["猫から逃げる","小さな街を作る","掃除機を止める"],["小さな文明の王になった","掃除機に吸われた","猫に追い回された"]],
+  ["太陽が突然消えた。",["地下に食料を運ぶ","祈る","焚き火をする"],["翌朝しれっと戻った","地球が急速に凍った","寒さで意識を失った"]],
+  ["世界中の水がコーラになった。",["飲む","水を探す","売る"],["コーラ長者になった","糖分で体調を崩した","3日後に水へ戻った"]],
+  ["あなた以外の時間が100倍速になった。",["状況を観察する","必死についていく","寝る"],["株価を先読みして大儲けした","数日で50年が過ぎた","目覚めたら老人になっていた"]],
+  ["銀行口座に突然100億円振り込まれた。",["使う","銀行へ連絡","全部投資する"],["本当にあなたのものだった","翌日すべて消えた","投資がさらに10倍になった"]],
+  ["空から毎日タライが落ちてくる世界になった。",["ヘルメットを買う","家から出ない","受け止める"],["タライ回避のプロになった","直撃した","テレビ出演して有名になった"]],
+  ["世界中の犬が人間の言葉を話し始めた。",["犬と商売する","質問する","無視する"],["犬向け通訳会社で成功した","国家機密を聞かされた","特に何も起きなかった"]]
 ];
-function fmt(n){if(n>=1e8)return (n/1e8).toFixed(1)+"億円";if(n>=1e4)return Math.round(n/1e4)+"万円";return Math.round(n)+"円"}
-function show(id){["home","game","result"].forEach(x=>document.getElementById(x).classList.toggle("hidden",x!==id))}
-function tries(){return Number(localStorage.getItem("iflife_tries")||0)}\nfunction updateAttempts(){const e=document.getElementById("attempts");if(e)e.textContent=tries()?("これまで "+tries()+" 人生をプレイ"):"最初の人生を始めよう"}\nfunction start(mode){const n=tries()+1;localStorage.setItem("iflife_tries",n);s={attempt:n,mode,age:0,money:mode==="win"?5000000:mode==="hard"?0:500000,health:100,happy:50,maxMoney:0,maxHappy:50,log:[],dead:false};document.getElementById("modeName").textContent=names[mode];show("game");next()}
-function goHome(){show("home");updateAttempts()}
-function retry(){start(s.mode)}
-function rnd(a){return a[Math.floor(Math.random()*a.length)]}
-function chance(p){return Math.random()<p}
+
+var normal = [
+  ["進路を決める時期になった。",["大学へ進学","就職する","旅に出る","専門学校へ行く"]],
+  ["友人から起業に誘われた。",["起業する","断る","副業で参加","全財産を出資する"]],
+  ["投資の話が舞い込んだ。",["投資する","見送る","少額だけ試す"]],
+  ["気になる人と出会った。",["話しかける","様子を見る","告白する"]],
+  ["転職の誘いが来た。",["転職する","残る","独立する"]],
+  ["突然SNSで投稿がバズった。",["発信を続ける","仕事に活かす","すぐ引退する"]],
+  ["遠方への移住話が出た。",["移住する","断る","1年だけ試す"]],
+  ["宝くじ売り場の前を通った。",["1枚買う","100枚買う","買わない"]],
+  ["家を買う機会がやってきた。",["ローンを組む","賃貸を続ける","地方に家を買う"]],
+  ["昔の友人から突然連絡が来た。",["会う","断る","仕事の相談をする"]],
+  ["新しい趣味を始めることにした。",["本気で打ち込む","ゆるく続ける","すぐ大会に出る"]],
+  ["海外から仕事のオファーが届いた。",["移住する","リモートで受ける","断る"]],
+  ["怪しい儲け話を持ちかけられた。",["全額乗る","少額試す","逃げる"]]
+];
+
+function fmt(n){
+  var sign=n<0?"-":"";
+  n=Math.abs(n);
+  if(n>=100000000)return sign+(n/100000000).toFixed(n>=1000000000?1:2).replace(/\.00$/,"")+"億円";
+  if(n>=10000)return sign+Math.round(n/10000).toLocaleString()+"万円";
+  return sign+Math.round(n).toLocaleString()+"円";
+}
+
+function show(id){
+  ["home","game","result"].forEach(function(x){
+    document.getElementById(x).classList.toggle("hidden",x!==id);
+  });
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+
+function tries(){return Number(localStorage.getItem("iflife_tries")||0);}
+function bestHard(){return Number(localStorage.getItem("iflife_best_hard")||0);}
+
+function updateRecord(){
+  var e=document.getElementById("record");
+  var t=tries();
+  var b=bestHard();
+  if(!t){
+    e.textContent="10秒で始められます。登録・ログイン不要。";
+  }else{
+    e.textContent="これまで "+t+" 人生をプレイ"+(b?" ／ 超絶過酷ベスト "+b+"歳":"");
+  }
+}
+
+function start(mode){
+  var n=tries()+1;
+  localStorage.setItem("iflife_tries",String(n));
+  s={
+    attempt:n,
+    mode:mode,
+    age:0,
+    money:mode==="win"?8000000:(mode==="hard"?0:Math.floor(Math.random()*1500000)),
+    health:100,
+    happy:50,
+    maxMoney:0,
+    maxHappy:50,
+    log:[],
+    dead:false,
+    count:0,
+    locked:false
+  };
+  document.getElementById("modeName").textContent=names[mode];
+  show("game");
+  next();
+}
+
+function goHome(){show("home");updateRecord();}
+function retry(){if(s)start(s.mode);}
+function rnd(a){return a[Math.floor(Math.random()*a.length)];}
+function chance(p){return Math.random()<p;}
+function shuffled(a){return a.slice().sort(function(){return Math.random()-.5;});}
+
 function next(){
- if(s.dead)return finish();
- let jump=s.age<6?Math.ceil(Math.random()*3):Math.ceil(Math.random()*6);s.age+=jump;
- let deathBase=s.mode==="hard"?(s.age<10?.10:s.age<20?.15:s.age<30?.20:.12):s.mode==="random"?(s.age>75?.18:s.age>55?.06:.015):(s.age>85?.13:s.age>65?.035:.006);
- if(s.health<30)deathBase+=.12;
- if(chance(deathBase)){s.dead=true;s.reason=s.mode==="hard"?rnd(["突然の落雷に直撃された","謎の感染症で倒れた","道路が突然消滅した","自宅に隕石が落ちた","巨大ハトについばまれた"]):"人生を終えた";return finish()}
- const ev=(s.mode==="hard"&&chance(.58))?rnd(chaos):rnd(normal);
- s.current=ev;document.getElementById("event").textContent=s.age+"歳："+ev[0];
- const choices=document.getElementById("choices");choices.innerHTML="";
- ev[1].sort(()=>Math.random()-.5).slice(0,Math.ceil(2+Math.random()*2)).forEach(c=>{const b=document.createElement("button");b.className="choice";b.textContent=c;b.onclick=()=>resolve(c);choices.appendChild(b)});
- render();
+  if(!s||s.dead)return finish();
+
+  s.locked=false;
+  document.getElementById("outcomeWrap").innerHTML="";
+
+  var jump=s.age<5?Math.ceil(Math.random()*2):Math.ceil(Math.random()*5);
+  s.age+=jump;
+
+  var deathBase;
+  if(s.mode==="hard"){
+    deathBase=s.age<5?.08:(s.age<10?.12:(s.age<20?.17:(s.age<30?.22:.15)));
+  }else if(s.mode==="random"){
+    deathBase=s.age>80?.20:(s.age>60?.07:.013);
+  }else{
+    deathBase=s.age>90?.15:(s.age>70?.035:.004);
+  }
+
+  if(s.health<35)deathBase+=.14;
+
+  if(chance(deathBase)){
+    s.dead=true;
+    s.reason=s.mode==="hard"?rnd(hardDeaths):(s.mode==="win"?"珍しい不運が重なり人生を終えた":"寿命または不運により人生を終えた");
+    finish();
+    return;
+  }
+
+  var ev=(s.mode==="hard"&&chance(.66))?rnd(chaos):rnd(normal);
+  s.current=ev;
+  s.count++;
+
+  document.getElementById("ageLabel").textContent="AGE "+s.age;
+  document.getElementById("event").textContent=ev[0];
+
+  var choices=document.getElementById("choices");
+  choices.innerHTML="";
+
+  shuffled(ev[1]).slice(0,Math.min(ev[1].length,Math.random()<.5?2:3)).forEach(function(c){
+    var b=document.createElement("button");
+    b.className="choice";
+    b.textContent=c;
+    b.onclick=function(){resolveChoice(c);};
+    choices.appendChild(b);
+  });
+
+  render();
 }
-function resolve(c){
- let good=s.mode==="hard"?.16:s.mode==="win"?.72:.46, verybad=s.mode==="hard"?.34:s.mode==="win"?.05:.14;
- let r=Math.random(),msg="";
- if(s.current.length===3&&s.mode==="hard"&&chaos.includes(s.current)){
-   const outcomes=s.current[2];msg=r<verybad?outcomes[2]:r<verybad+good?outcomes[0]:outcomes[1];
-   if(/消滅|つぶ|酸欠|吸われ/.test(msg)){s.dead=true;s.reason=msg}
-   else if(/100億/.test(msg))s.money+=1e10;else if(/重体|失った/.test(msg))s.health-=35;
- }else{
-   if(r<verybad){s.money-=Math.floor(Math.random()*1800000);s.health-=Math.floor(Math.random()*25);s.happy-=Math.floor(Math.random()*18);msg="結果は最悪だった。"}
-   else if(r<verybad+good){s.money+=Math.floor(Math.random()*8000000);s.happy+=Math.floor(Math.random()*18);msg="思いがけず良い結果になった。"}
-   else{ s.money+=Math.floor((Math.random()-.35)*1200000);s.happy+=Math.floor((Math.random()-.5)*10);msg="まずまずの結果だった。"}
- }
- s.health=Math.max(0,Math.min(100,s.health));s.happy=Math.max(0,Math.min(100,s.happy));s.maxMoney=Math.max(s.maxMoney,s.money);s.maxHappy=Math.max(s.maxHappy,s.happy);
- s.log.unshift(s.age+"歳："+c+" → "+msg);if(s.health<=0){s.dead=true;s.reason="健康を失った"};render();\n const tone=/成功|良い|長者|王|100億|救われ/.test(msg)?"good":(/最悪|失った|重体|消滅|酸欠|つぶ|吸われ|壊滅/.test(msg)?"bad":"neutral");\n const ow=document.getElementById("outcomeWrap");if(ow)ow.innerHTML="<div class=\"outcome "+tone+"\">"+msg+"</div><button class=\"continue\" onclick=\""+(s.dead?"finish()":"next()")+"\">"+(s.dead?"人生の結果を見る":"次へ進む →")+"</button>";
+
+function resolveChoice(c){
+  if(s.locked)return;
+  s.locked=true;
+
+  document.querySelectorAll(".choice").forEach(function(b){b.disabled=true;});
+
+  var good=s.mode==="hard"?.15:(s.mode==="win"?.76:.47);
+  var verybad=s.mode==="hard"?.40:(s.mode==="win"?.04:.15);
+  var r=Math.random();
+  var msg="";
+  var tone="neutral";
+
+  if(s.current.length===3&&s.mode==="hard"&&chaos.indexOf(s.current)!==-1){
+    var o=s.current[2];
+    if(r<verybad){msg=o[2];tone="bad";}
+    else if(r<verybad+good){msg=o[0];tone="good";}
+    else{msg=o[1];tone=/長者|王|成功|救/.test(msg)?"good":"bad";}
+
+    if(/消滅|押しつぶ|酸欠|吸われ|老人になった/.test(msg)){
+      s.dead=true;
+      s.reason=msg;
+    }else if(/100億/.test(msg)){
+      s.money+=10000000000;
+      tone="good";
+    }else if(/10倍/.test(msg)){
+      s.money=Math.max(s.money,100000000)*10;
+      tone="good";
+    }else if(/重体|体調|壊滅/.test(msg)){
+      s.health-=35;
+      tone="bad";
+    }else if(/長者|大儲け|王|成功|有名/.test(msg)){
+      s.money+=Math.floor(20000000+Math.random()*80000000);
+      s.happy+=20;
+      tone="good";
+    }
+  }else{
+    if(r<verybad){
+      var loss=Math.floor(200000+Math.random()*3000000);
+      s.money-=loss;
+      s.health-=Math.floor(Math.random()*28);
+      s.happy-=8+Math.floor(Math.random()*18);
+      msg=rnd(["完全に裏目に出た。","想像以上の大失敗になった。","判断が最悪の方向へ転んだ。"])+" 資産 "+fmt(-loss);
+      tone="bad";
+    }else if(r<verybad+good){
+      var gain=Math.floor(300000+Math.random()*(s.mode==="win"?18000000:7000000));
+      s.money+=gain;
+      s.happy+=6+Math.floor(Math.random()*17);
+      msg=rnd(["予想外の大成功になった。","かなりうまくいった。","人生が良い方向へ転がった。"])+" 資産 +"+fmt(gain);
+      tone="good";
+    }else{
+      s.money+=Math.floor((Math.random()-.45)*900000);
+      s.happy+=Math.floor((Math.random()-.5)*8);
+      msg=rnd(["特に大きな変化はなかった。","まあまあの結果だった。","思ったほど何も起きなかった。"]);
+      tone="neutral";
+    }
+  }
+
+  s.health=Math.max(0,Math.min(100,s.health));
+  s.happy=Math.max(0,Math.min(100,s.happy));
+  s.maxMoney=Math.max(s.maxMoney,s.money);
+  s.maxHappy=Math.max(s.maxHappy,s.happy);
+  s.log.unshift(s.age+"歳　"+c+" → "+msg);
+
+  if(s.health<=0){
+    s.dead=true;
+    s.reason="健康状態が0になった";
+  }
+
+  render();
+
+  var w=document.getElementById("outcomeWrap");
+  var label=s.dead?"人生の結果を見る":"次へ進む →";
+  w.innerHTML='<div class="outcome '+tone+'">'+msg+'</div><button class="continue" id="continueButton">'+label+'</button>';
+  document.getElementById("continueButton").onclick=function(){
+    if(s.dead)finish();else next();
+  };
 }
-function render(){document.getElementById("age").textContent=s.age;document.getElementById("money").textContent=fmt(s.money);document.getElementById("health").textContent=s.health;document.getElementById("happy").textContent=s.happy;document.getElementById("log").innerHTML=s.log.slice(0,12).map(x=>"<div>"+x+"</div>").join("")}
-function topForAge(a){if(s.mode!=="hard")return Math.max(.1,100-a);if(a>=100)return .10;if(a>=90)return .27;if(a>=80)return .65;if(a>=70)return 1.46;if(a>=50)return 6.5;if(a>=30)return 22.45;return Math.max(25,100-a*2.5)}
+
+function render(){
+  document.getElementById("age").textContent=s.age;
+  document.getElementById("money").textContent=fmt(s.money);
+  document.getElementById("health").textContent=s.health;
+  document.getElementById("happy").textContent=s.happy;
+  document.getElementById("log").innerHTML=s.log.slice(0,10).map(function(x){
+    return "<div>"+x+"</div>";
+  }).join("");
+}
+
+function topForAge(a){
+  if(!s||s.mode!=="hard")return null;
+  if(a>=100)return .10;
+  if(a>=90)return .27;
+  if(a>=80)return .63;
+  if(a>=70)return 1.46;
+  if(a>=50)return 6.50;
+  if(a>=30)return 22.45;
+  return Math.max(25,100-a*2.5);
+}
+
+function titleFor(a){
+  if(s.mode==="hard"){
+    if(a>=100)return"伝説。過酷人生の方が負けている";
+    if(a>=80)return"ほぼ不死身";
+    if(a>=50)return"異常な生存力";
+    if(a>=30)return"かなり粘った";
+    if(a>=20)return"平均寿命を突破";
+    if(a<10)return"開始直後に世界が牙をむいた";
+    return"超絶過酷らしい結末";
+  }
+  if(s.mode==="win")return a>=85?"勝ち組人生を最後まで走り切った":"恵まれていても人生は読めない";
+  return a>=90?"かなり長い人生だった":"何が起こるか分からない人生だった";
+}
+
+function badgeFor(){
+  if(s.mode==="hard"&&s.age>=80)return"🏆 SURVIVOR LEGEND";
+  if(s.mode==="hard"&&s.maxMoney>=100000000)return"💰 過酷人生から億万長者";
+  if(s.maxMoney>=1000000000)return"👑 超富豪";
+  if(s.maxHappy>=90)return"✨ 幸福人生";
+  if(s.age<10)return"💀 スピードラン";
+  return"🎲 ONE LIFE";
+}
+
 function finish(){
- show("result");const top=topForAge(s.age);document.getElementById("resultMode").textContent=names[s.mode];document.getElementById("deathAge").textContent=s.age;
- document.getElementById("maxMoney").textContent=fmt(s.maxMoney);document.getElementById("maxHappy").textContent=s.maxHappy;
- document.getElementById("rare").textContent=s.mode==="hard"?"生存記録：上位 約"+top.toFixed(top<1?2:1)+"%":"この人生は毎回ランダム";
- document.getElementById("deathReason").textContent="最期："+(s.reason||"寿命を迎えた");
+  if(!s)return;
+
+  show("result");
+
+  var oldBest=bestHard();
+  var isNew=s.mode==="hard"&&s.age>oldBest;
+  if(isNew)localStorage.setItem("iflife_best_hard",String(s.age));
+
+  var top=topForAge(s.age);
+
+  document.getElementById("resultMode").textContent=names[s.mode];
+  document.getElementById("resultTitle").textContent=titleFor(s.age);
+  document.getElementById("deathAge").textContent=s.age;
+  document.getElementById("maxMoney").textContent=fmt(s.maxMoney);
+  document.getElementById("maxHappy").textContent=s.maxHappy;
+  document.getElementById("eventCount").textContent=s.count+"回";
+  document.getElementById("attemptNo").textContent="#"+s.attempt;
+  document.getElementById("rare").textContent=top!==null?"生存記録 上位 約 "+top.toFixed(top<1?2:1)+"%":"今回も唯一のランダム人生";
+  document.getElementById("newRecord").textContent=isNew?"NEW RECORD：超絶過酷の自己ベスト更新！":"";
+  document.getElementById("badge").textContent=badgeFor();
+  document.getElementById("deathReason").textContent="最期："+(s.reason||"人生を終えた");
+
+  updateRecord();
 }
-function shareText(){return names[s.mode]+"をやったら"+s.age+"歳まで生きた。\n最大資産 "+fmt(s.maxMoney)+"\n"+(s.mode==="hard"?"生存上位 約"+topForAge(s.age).toFixed(2)+"%\n":"")+"人生は選べても、結果は選べない。\n#IFLIFE"}
-async function share(){if(navigator.share){try{return await navigator.share({title:"IF LIFE",text:shareText(),url:location.href})}catch(e){}}copyText()}
-async function copyText(){const t=shareText();try{await navigator.clipboard.writeText(t);alert("シェア文をコピーしました")}catch(e){prompt("コピーしてください",t)}}
-updateAttempts();\n</script>
-</body></html>
+
+function shareText(){
+  var top=topForAge(s.age);
+  var text=names[s.mode]+"をやったら"+s.age+"歳まで生きた。\n";
+  text+="最大資産 "+fmt(s.maxMoney)+"\n";
+  if(top!==null)text+="生存上位 約"+top.toFixed(2)+"%\n";
+  text+=badgeFor()+"\n";
+  text+="人生は選べても、結果は選べない。\n#IFLIFE";
+  return text;
+}
+
+async function shareResult(){
+  var text=shareText();
+  if(navigator.share){
+    try{
+      await navigator.share({title:"IF LIFE",text:text,url:location.href});
+      return;
+    }catch(e){}
+  }
+  copyResult();
+}
+
+async function copyResult(){
+  var t=shareText();
+  try{
+    await navigator.clipboard.writeText(t);
+    alert("シェア文をコピーしました");
+  }catch(e){
+    prompt("コピーしてください",t);
+  }
+}
+
+updateRecord();
+</script>
+</body>
+</html>
