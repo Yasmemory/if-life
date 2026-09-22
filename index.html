@@ -74,7 +74,7 @@ button{font:inherit}
 .actions button{padding:14px;border-radius:13px;border:0;font-weight:850;cursor:pointer}
 .primary{background:#fff;color:#111}
 .secondary{background:#181c25;color:#fff;border:1px solid #303746!important}
-.new-record{margin-top:8px;color:#f6d889;font-weight:900}
+.new-record{margin-top:8px;color:#f6d889;font-weight:900}.hard-only-hide{display:none!important}
 @media(max-width:700px){
   .wrap{padding:14px 13px 36px}
   .hero{padding-top:28px}
@@ -102,7 +102,7 @@ button{font:inherit}
   <div class="stats">
     <div class="stat"><small>超絶過酷 平均寿命</small><b>20.1歳</b></div>
     <div class="stat"><small>80歳まで生存</small><b>0.63%</b></div>
-    <div class="stat"><small>資産1億円到達</small><b>0.40%</b></div>
+    <div class="stat"><small>100歳まで生存</small><b>0.10%</b></div>
   </div>
 
   <div class="howto">
@@ -116,7 +116,7 @@ button{font:inherit}
   <div class="modes">
     <button class="mode hard" onclick="start('hard')">
       <h3>☠ 超絶過酷人生</h3>
-      <p>宇宙規模の災害、意味不明な事故、突然の大幸運。とにかく生き残れ。</p>
+      <p>理不尽な世界イベントが次々発生。金も成功も関係ない。何歳まで生き残れるかだけ。</p>
       <span class="tag">最初はこれがおすすめ</span>
     </button>
     <button class="mode random" onclick="start('random')">
@@ -138,7 +138,7 @@ button{font:inherit}
 
   <div class="pills">
     <div class="pill">年齢<b><span id="age">0</span>歳</b></div>
-    <div class="pill">資産<b id="money">0円</b></div>
+    <div class="pill" id="moneyPill">資産<b id="money">0円</b></div>
     <div class="pill">健康<b id="health">100</b></div>
     <div class="pill">幸福<b id="happy">50</b></div>
   </div>
@@ -164,7 +164,7 @@ button{font:inherit}
     <div class="badge" id="badge"></div>
 
     <div class="summary">
-      <div><small>最大資産</small><b id="maxMoney"></b></div>
+      <div id="moneySummary"><small>最大資産</small><b id="maxMoney"></b></div>
       <div><small>最高幸福度</small><b id="maxHappy"></b></div>
       <div><small>人生イベント</small><b id="eventCount"></b></div>
       <div><small>今回の挑戦</small><b id="attemptNo"></b></div>
@@ -208,21 +208,29 @@ var chaos = [
   ["地球の重力が突然1億倍になった。",["机の下に隠れる","気合いで耐える","地下へ逃げる"],["なぜか3秒で元に戻った","建物ごと押し潰された","一瞬で押しつぶされた"]],
   ["30mの巨大ハトが街に現れた。",["パンを投げる","全力で逃げる","ハトに乗ろうとする"],["なぜか懐かれた","街ごと巣にされた","巨大ハトについばまれた"]],
   ["月が地球に向かって落ちてきている。",["避難所へ行く","月を見届ける","普段通り過ごす"],["直前で軌道が逸れた","世界の半分が壊滅した","月との衝突で消滅した"]],
-  ["宇宙人があなたを人類代表に指名した。",["交渉する","歓迎する","逃げる"],["100億円相当の技術をもらった","宇宙人の王になった","地球外へ連れて行かれた"]],
   ["世界中の酸素濃度が突然半分になった。",["酸素ボンベを探す","寝て待つ","全力疾走する"],["数日で元に戻った","重体になった","酸欠で倒れた"]],
-  ["全人類が突然5cmになった。",["猫から逃げる","小さな街を作る","掃除機を止める"],["小さな文明の王になった","掃除機に吸われた","猫に追い回された"]],
+  ["全人類が突然5cmになった。",["猫から逃げる","小さな街を作る","掃除機を止める"],["小さな文明を築けた","掃除機に吸われた","猫に追い回された"]],
   ["太陽が突然消えた。",["地下に食料を運ぶ","祈る","焚き火をする"],["翌朝しれっと戻った","地球が急速に凍った","寒さで意識を失った"]],
-  ["世界中の水がコーラになった。",["飲む","水を探す","売る"],["コーラ長者になった","糖分で体調を崩した","3日後に水へ戻った"]],
-  ["あなた以外の時間が100倍速になった。",["状況を観察する","必死についていく","寝る"],["株価を先読みして大儲けした","数日で50年が過ぎた","目覚めたら老人になっていた"]],
-  ["銀行口座に突然100億円振り込まれた。",["使う","銀行へ連絡","全部投資する"],["本当にあなたのものだった","翌日すべて消えた","投資がさらに10倍になった"]],
-  ["空から毎日タライが落ちてくる世界になった。",["ヘルメットを買う","家から出ない","受け止める"],["タライ回避のプロになった","直撃した","テレビ出演して有名になった"]],
-  ["世界中の犬が人間の言葉を話し始めた。",["犬と商売する","質問する","無視する"],["犬向け通訳会社で成功した","国家機密を聞かされた","特に何も起きなかった"]]
+  ["海面が一晩で3000m上昇した。",["高い場所へ逃げる","船を探す","泳ぐ"],["ぎりぎり山頂に着いた","都市ごと沈んだ","波に飲み込まれた"]],
+  ["世界中の床が突然トランポリンになった。",["じっとする","全力で走る","ジャンプする"],["数分で元に戻った","天井に頭をぶつけた","成層圏まで飛ばされた"]],
+  ["空から毎日タライが落ちてくる世界になった。",["ヘルメットを買う","家から出ない","受け止める"],["回避の達人になった","直撃した","なぜか無傷だった"]],
+  ["世界中の犬が人間の言葉を話し始めた。",["犬に聞く","逃げる","無視する"],["犬たちに避難場所を教えてもらった","犬社会に追放された","特に何も起きなかった"]],
+  ["雲が全部地上に落ちてきた。",["高台へ行く","家にこもる","雲の中を進む"],["雲が数時間で消えた","視界ゼロで事故に遭った","そのまま迷子になった"]],
+  ["全世界の信号が同時に青になった。",["家にいる","車で出る","自転車で出る"],["大渋滞だけで済んだ","交差点で大事故が起きた","奇跡的に無傷だった"]],
+  ["突然すべての動物が10倍の大きさになった。",["地下へ逃げる","動物園へ行く","家にこもる"],["数時間で元に戻った","巨大猫に追われた","巨大蚊に刺された"]],
+  ["地球が突然自転を10倍にした。",["何かにつかまる","外に出る","寝る"],["なぜか体は耐えた","海と街が吹き飛んだ","ベッドごと飛ばされた"]],
+  ["空気がゼリー状になった。",["ゆっくり進む","息を止める","走る"],["数分で元に戻った","身動きが取れなくなった","呼吸できなくなった"]],
+  ["地面から突然マグマが噴き出した。",["高台へ逃げる","地下へ逃げる","様子を見る"],["噴火はすぐ止まった","逃げ道を失った","マグマに巻き込まれた"]],
+  ["全ての建物が一斉に歩き始めた。",["外へ逃げる","建物に乗る","動かない"],["街が元の位置に戻った","建物同士が衝突した","なぜか隣町まで運ばれた"]],
+  ["重力が上下逆になった。",["机につかまる","外へ出る","天井へ移動する"],["すぐ元に戻った","空へ落ちていった","天井に激突した"]],
+  ["地球上の温度が一瞬で120度になった。",["冷凍庫に入る","地下へ逃げる","水をかぶる"],["10秒後に元に戻った","熱波に耐えられなかった","重度のやけどを負った"]],
+  ["1分後に何かが起きるとだけ全世界に警報が出た。",["走る","伏せる","何もしない"],["何も起きなかった","隕石群が降ってきた","なぜかあなたの周囲だけ安全だった"]]
 ];
 
 var normal = [
   ["進路を決める時期になった。",["大学へ進学","就職する","旅に出る","専門学校へ行く"]],
-  ["友人から起業に誘われた。",["起業する","断る","副業で参加","全財産を出資する"]],
-  ["投資の話が舞い込んだ。",["投資する","見送る","少額だけ試す"]],
+  ["友人から急に海外旅行へ誘われた。",["行く","断る","行き先だけ聞く"]],
+  ["知らない町で一日だけ暮らすことになった。",["散歩する","店に入る","すぐ帰る"]],
   ["気になる人と出会った。",["話しかける","様子を見る","告白する"]],
   ["転職の誘いが来た。",["転職する","残る","独立する"]],
   ["突然SNSで投稿がバズった。",["発信を続ける","仕事に活かす","すぐ引退する"]],
@@ -232,7 +240,7 @@ var normal = [
   ["昔の友人から突然連絡が来た。",["会う","断る","仕事の相談をする"]],
   ["新しい趣味を始めることにした。",["本気で打ち込む","ゆるく続ける","すぐ大会に出る"]],
   ["海外から仕事のオファーが届いた。",["移住する","リモートで受ける","断る"]],
-  ["怪しい儲け話を持ちかけられた。",["全額乗る","少額試す","逃げる"]]
+  ["道端に謎の赤いボタンが置いてある。",["押す","押さない","持ち帰る"]]
 ];
 
 function fmt(n){
@@ -282,6 +290,8 @@ function start(mode){
     locked:false
   };
   document.getElementById("modeName").textContent=names[mode];
+  document.getElementById("moneyPill").classList.toggle("hard-only-hide",mode==="hard");
+  document.getElementById("moneySummary").classList.toggle("hard-only-hide",mode==="hard");
   show("game");
   next();
 }
@@ -319,7 +329,7 @@ function next(){
     return;
   }
 
-  var ev=(s.mode==="hard"&&chance(.66))?rnd(chaos):rnd(normal);
+  var ev=(s.mode==="hard"&&chance(.92))?rnd(chaos):rnd(normal);
   s.current=ev;
   s.count++;
 
@@ -361,22 +371,31 @@ function resolveChoice(c){
     if(/消滅|押しつぶ|酸欠|吸われ|老人になった/.test(msg)){
       s.dead=true;
       s.reason=msg;
-    }else if(/100億/.test(msg)){
-      s.money+=10000000000;
-      tone="good";
-    }else if(/10倍/.test(msg)){
-      s.money=Math.max(s.money,100000000)*10;
-      tone="good";
-    }else if(/重体|体調|壊滅/.test(msg)){
+    }else if(/重体|体調|壊滅|やけど|追われ/.test(msg)){
       s.health-=35;
       tone="bad";
-    }else if(/長者|大儲け|王|成功|有名/.test(msg)){
-      s.money+=Math.floor(20000000+Math.random()*80000000);
-      s.happy+=20;
+    }else if(/無傷|戻った|安全|築けた|教えてもらった|達人/.test(msg)){
+      s.health=Math.min(100,s.health+8);
+      s.happy+=10;
       tone="good";
     }
   }else{
-    if(r<verybad){
+    if(s.mode==="hard"){
+      if(r<verybad){
+        s.health-=18+Math.floor(Math.random()*30);
+        s.happy-=8+Math.floor(Math.random()*18);
+        msg=rnd(["完全に裏目に出た。","最悪のタイミングだった。","運がなさすぎた。"]);
+        tone="bad";
+      }else if(r<verybad+good){
+        s.health=Math.min(100,s.health+5+Math.floor(Math.random()*10));
+        s.happy+=5+Math.floor(Math.random()*10);
+        msg=rnd(["奇跡的に助かった。","なぜか無事だった。","ギリギリ生き延びた。"]);
+        tone="good";
+      }else{
+        msg=rnd(["なんとか切り抜けた。","特に何も起きなかった。","今回は生き残った。"]);
+        tone="neutral";
+      }
+    }else if(r<verybad){
       var loss=Math.floor(200000+Math.random()*3000000);
       s.money-=loss;
       s.health-=Math.floor(Math.random()*28);
@@ -455,8 +474,7 @@ function titleFor(a){
 
 function badgeFor(){
   if(s.mode==="hard"&&s.age>=80)return"🏆 SURVIVOR LEGEND";
-  if(s.mode==="hard"&&s.maxMoney>=100000000)return"💰 過酷人生から億万長者";
-  if(s.maxMoney>=1000000000)return"👑 超富豪";
+  if(s.mode!=="hard"&&s.maxMoney>=1000000000)return"👑 超富豪";
   if(s.maxHappy>=90)return"✨ 幸福人生";
   if(s.age<10)return"💀 スピードラン";
   return"🎲 ONE LIFE";
@@ -491,7 +509,7 @@ function finish(){
 function shareText(){
   var top=topForAge(s.age);
   var text=names[s.mode]+"をやったら"+s.age+"歳まで生きた。\n";
-  text+="最大資産 "+fmt(s.maxMoney)+"\n";
+  if(s.mode!=="hard")text+="最大資産 "+fmt(s.maxMoney)+"\n";
   if(top!==null)text+="生存上位 約"+top.toFixed(2)+"%\n";
   text+=badgeFor()+"\n";
   text+="人生は選べても、結果は選べない。\n#IFLIFE";
