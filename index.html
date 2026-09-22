@@ -139,8 +139,7 @@ button{font:inherit}
   <div class="pills">
     <div class="pill">年齢<b><span id="age">0</span>歳</b></div>
     <div class="pill" id="moneyPill">資産<b id="money">0円</b></div>
-    <div class="pill">健康<b id="health">100</b></div>
-    <div class="pill">幸福<b id="happy">50</b></div>
+    <div class="pill">残りライフ<b id="life">3.0</b></div>
   </div>
 
   <div class="panel">
@@ -165,8 +164,8 @@ button{font:inherit}
 
     <div class="summary">
       <div id="moneySummary"><small>最大資産</small><b id="maxMoney"></b></div>
-      <div><small>最高幸福度</small><b id="maxHappy"></b></div>
       <div><small>人生イベント</small><b id="eventCount"></b></div>
+      <div><small>残りライフ</small><b id="finalLife"></b></div>
       <div><small>今回の挑戦</small><b id="attemptNo"></b></div>
     </div>
 
@@ -247,22 +246,22 @@ var fatalChaosOutcomes = new Set([
   "隕石群が降ってきた"
 ]);
 
-var severeChaosOutcomes = new Set([
-  "世界の半分が壊滅した",
-  "重体になった",
-  "猫に追い回された",
-  "糖分で体調を崩した",
-  "天井に頭をぶつけた",
-  "直撃した",
-  "視界ゼロで事故に遭った",
-  "巨大猫に追われた",
-  "巨大蚊に刺された",
-  "身動きが取れなくなった",
-  "逃げ道を失った",
-  "建物同士が衝突した",
-  "天井に激突した",
-  "重度のやけどを負った"
-]);
+var chaosDamage = {
+  "世界の半分が壊滅した": [1.0,"世界の半分が消し飛んだが、なぜか生きている。"],
+  "重体になった": [1.0,"ギリギリ助かった。"],
+  "猫に追い回された": [0.5,"巨大ネコに追われて50kmダッシュした。"],
+  "糖分で体調を崩した": [0.5,"コーラしかない世界で糖分を摂りすぎた。"],
+  "天井に頭をぶつけた": [0.5,"天井に頭から激突した。"],
+  "直撃した": [1.0,"タライが頭に直撃した。"],
+  "視界ゼロで事故に遭った": [1.0,"雲の中で派手に事故った。"],
+  "巨大猫に追われた": [0.5,"巨大ネコに追われて50kmダッシュした。"],
+  "巨大蚊に刺された": [0.5,"巨大蚊に血を吸われすぎた。"],
+  "身動きが取れなくなった": [0.5,"ゼリー状の空気に全身を封じられた。"],
+  "逃げ道を失った": [1.0,"マグマに囲まれて命からがら脱出した。"],
+  "建物同士が衝突した": [1.0,"歩く建物同士の正面衝突に巻き込まれた。"],
+  "天井に激突した": [0.5,"逆重力で天井に叩きつけられた。"],
+  "重度のやけどを負った": [1.0,"全身こんがり焼けたが生きている。"]
+};
 
 var normal = [
   ["進路を決める時期になった。",["大学へ進学","就職する","旅に出る","専門学校へ行く"]],
@@ -317,10 +316,8 @@ function start(mode){
     mode:mode,
     age:0,
     money:mode==="win"?8000000:(mode==="hard"?0:Math.floor(Math.random()*1500000)),
-    health:100,
-    happy:50,
+    life:3.0,
     maxMoney:0,
-    maxHappy:50,
     log:[],
     dead:false,
     count:0,
@@ -357,10 +354,9 @@ function next(){
     deathBase=s.age>90?.15:(s.age>70?.035:.004);
   }
 
-  if(s.health<35)deathBase+=.14;
-
   if(chance(deathBase)){
     s.dead=true;
+    s.life=0;
     s.reason=s.mode==="hard"?rnd(hardDeaths):(s.mode==="win"?"珍しい不運が重なり人生を終えた":"寿命または不運により人生を終えた");
     finish();
     return;
@@ -406,27 +402,32 @@ function resolveChoice(c){
     else{msg=o[1];tone=/長者|王|成功|救/.test(msg)?"good":"bad";}
 
     if(fatalChaosOutcomes.has(msg)){
+      s.life=0;
       s.dead=true;
       s.reason=msg;
       tone="bad";
-    }else if(severeChaosOutcomes.has(msg)){
-      s.health-=45;
+    }else if(chaosDamage[msg]){
+      var damage=chaosDamage[msg][0];
+      var extra=chaosDamage[msg][1];
+      s.life=Math.max(0,s.life-damage);
+      msg=extra+" 残りライフは"+s.life.toFixed(1)+"だ！";
       tone="bad";
+      if(s.life<=0){
+        s.dead=true;
+        s.reason=extra;
+      }
     }else if(/無傷|戻った|安全|築けた|教えてもらった|達人|助かった/.test(msg)){
-      s.health=Math.min(100,s.health+8);
-      s.happy+=10;
       tone="good";
     }
   }else{
     if(s.mode==="hard"){
       if(r<verybad){
-        s.health-=18+Math.floor(Math.random()*30);
-        s.happy-=8+Math.floor(Math.random()*18);
-        msg=rnd(["完全に裏目に出た。","最悪のタイミングだった。","運がなさすぎた。"]);
+        var d=chance(.25)?1.0:0.5;
+        s.life=Math.max(0,s.life-d);
+        msg=rnd(["完全に裏目に出た。","最悪のタイミングだった。","運がなさすぎた。"])+" 残りライフは"+s.life.toFixed(1)+"だ！";
         tone="bad";
+        if(s.life<=0){s.dead=true;s.reason="不運が積み重なって力尽きた";}
       }else if(r<verybad+good){
-        s.health=Math.min(100,s.health+5+Math.floor(Math.random()*10));
-        s.happy+=5+Math.floor(Math.random()*10);
         msg=rnd(["奇跡的に助かった。","なぜか無事だった。","ギリギリ生き延びた。"]);
         tone="good";
       }else{
@@ -436,34 +437,22 @@ function resolveChoice(c){
     }else if(r<verybad){
       var loss=Math.floor(200000+Math.random()*3000000);
       s.money-=loss;
-      s.health-=Math.floor(Math.random()*28);
-      s.happy-=8+Math.floor(Math.random()*18);
       msg=rnd(["完全に裏目に出た。","想像以上の大失敗になった。","判断が最悪の方向へ転んだ。"])+" 資産 "+fmt(-loss);
       tone="bad";
     }else if(r<verybad+good){
       var gain=Math.floor(300000+Math.random()*(s.mode==="win"?18000000:7000000));
       s.money+=gain;
-      s.happy+=6+Math.floor(Math.random()*17);
       msg=rnd(["予想外の大成功になった。","かなりうまくいった。","人生が良い方向へ転がった。"])+" 資産 +"+fmt(gain);
       tone="good";
     }else{
       s.money+=Math.floor((Math.random()-.45)*900000);
-      s.happy+=Math.floor((Math.random()-.5)*8);
       msg=rnd(["特に大きな変化はなかった。","まあまあの結果だった。","思ったほど何も起きなかった。"]);
       tone="neutral";
     }
   }
 
-  s.health=Math.max(0,Math.min(100,s.health));
-  s.happy=Math.max(0,Math.min(100,s.happy));
   s.maxMoney=Math.max(s.maxMoney,s.money);
-  s.maxHappy=Math.max(s.maxHappy,s.happy);
   s.log.unshift(s.age+"歳　"+c+" → "+msg);
-
-  if(s.health<=0){
-    s.dead=true;
-    s.reason="健康状態が0になった";
-  }
 
   render();
 
@@ -478,8 +467,7 @@ function resolveChoice(c){
 function render(){
   document.getElementById("age").textContent=s.age;
   document.getElementById("money").textContent=fmt(s.money);
-  document.getElementById("health").textContent=s.health;
-  document.getElementById("happy").textContent=s.happy;
+  document.getElementById("life").textContent=s.life.toFixed(1);
   document.getElementById("log").innerHTML=s.log.slice(0,10).map(function(x){
     return "<div>"+x+"</div>";
   }).join("");
@@ -513,7 +501,6 @@ function titleFor(a){
 function badgeFor(){
   if(s.mode==="hard"&&s.age>=80)return"🏆 SURVIVOR LEGEND";
   if(s.mode!=="hard"&&s.maxMoney>=1000000000)return"👑 超富豪";
-  if(s.maxHappy>=90)return"✨ 幸福人生";
   if(s.age<10)return"💀 スピードラン";
   return"🎲 ONE LIFE";
 }
@@ -533,8 +520,8 @@ function finish(){
   document.getElementById("resultTitle").textContent=titleFor(s.age);
   document.getElementById("deathAge").textContent=s.age;
   document.getElementById("maxMoney").textContent=fmt(s.maxMoney);
-  document.getElementById("maxHappy").textContent=s.maxHappy;
   document.getElementById("eventCount").textContent=s.count+"回";
+  document.getElementById("finalLife").textContent=s.life.toFixed(1);
   document.getElementById("attemptNo").textContent="#"+s.attempt;
   document.getElementById("rare").textContent=top!==null?"生存記録 上位 約 "+top.toFixed(top<1?2:1)+"%":"今回も唯一のランダム人生";
   document.getElementById("newRecord").textContent=isNew?"NEW RECORD：超絶過酷の自己ベスト更新！":"";
