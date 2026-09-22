@@ -187,7 +187,7 @@ button{font:inherit}
     <div class="achievement-list" id="achievementList"></div>
     <div class="death" id="deathReason"></div>
     <div id="adSlot" class="ad-slot hidden">広告枠：広告サービス接続後、3人生ごとにここへ表示</div>
-    <div class="premium-card">
+    <div class="premium-card hidden" id="premiumCard">
       <h3>⭐ IF LIFE Premium</h3>
       <p>広告なし・追加モード・過去ベスト詳細などを想定。決済接続までは準備中です。</p>
       <button onclick="premiumInterest()">Premiumに興味がある</button>
@@ -745,8 +745,10 @@ function finish(){
   var dailyResult=document.getElementById("dailyResult");
   dailyResult.textContent=s.daily?("📅 今日のチャレンジ結果："+s.age+"歳 / Seed "+s.seed):"";
   var ad=document.getElementById("adSlot");
-  var shouldAd=s.attempt%MONETIZATION.adEvery===0;
+  var shouldAd=MONETIZATION.adsEnabled&&s.attempt%MONETIZATION.adEvery===0;
   ad.classList.toggle("hidden",!shouldAd);
+  var premium=document.getElementById("premiumCard");
+  if(premium)premium.classList.toggle("hidden",!MONETIZATION.premiumEnabled);
   track("game_finish",{mode:s.mode,age:s.age,daily:s.daily});
   updateRecord();
 }
