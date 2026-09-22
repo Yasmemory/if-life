@@ -94,16 +94,17 @@ button{font:inherit}
     <div class="brand">IF LIFE</div>
     <div class="sub">人生は選べても、結果は選べない。</div>
     <div class="challenge">
-      <strong>☠ さらに過酷化。あなたは何歳まで生き残れる？</strong>
-      <small>即死も大ダメージも普通に起こる。選択肢も、その結果もランダム。</small>
+      <strong>☠ 平均寿命18.2歳。80歳まで生き残れる？</strong>
+      <small>100万人生の実測で80歳到達は0.322%。選択肢も、その結果もランダム。</small>
     </div>
   </div>
 
   <div class="stats">
-    <div class="stat"><small>超絶過酷</small><b>平均寿命20歳未満を狙う</b></div>
-    <div class="stat"><small>80歳まで生存</small><b>超レア</b></div>
-    <div class="stat"><small>100歳まで生存</small><b>ほぼ伝説</b></div>
+    <div class="stat"><small>超絶過酷 平均寿命</small><b>18.22歳</b></div>
+    <div class="stat"><small>80歳まで生存</small><b>0.322%</b></div>
+    <div class="stat"><small>100歳まで生存</small><b>0.016%</b></div>
   </div>
+  <div style="text-align:center;color:#747c8d;font-size:.75rem;margin-top:-8px;margin-bottom:14px">※ 超絶過酷は100万人生シミュレーションによる実測値</div>
 
   <div class="howto">
     <span>① モードを選ぶ</span>
@@ -265,8 +266,8 @@ var chaosDamage = {
   "重度のやけどを負った": [65,"全身こんがり焼けたが生きている。"]
 }
 
-var HARD_FATAL_RATE = 0.16;
-var HARD_DAMAGE_RATE = 0.38;
+var HARD_FATAL_RATE = 0.12;
+var HARD_DAMAGE_RATE = 0.28;
 
 function chaosCategory(msg){
   if(fatalChaosOutcomes.has(msg)) return "fatal";
@@ -530,12 +531,13 @@ function render(){
 
 function topForAge(a){
   if(!s||s.mode!=="hard")return null;
-  if(a>=100)return .13;
-  if(a>=90)return .46;
-  if(a>=80)return 1.17;
-  if(a>=70)return 2.67;
-  if(a>=50)return 9.20;
-  if(a>=30)return 27.65;
+  if(a>=100)return .0161;
+  if(a>=90)return .0781;
+  if(a>=80)return .3216;
+  if(a>=70)return 1.0406;
+  if(a>=50)return 5.4553;
+  if(a>=30)return 20.8856;
+  if(a>=20)return 37.3302;
   return Math.max(25,100-a*2.5);
 }
 
