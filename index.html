@@ -94,15 +94,15 @@ button{font:inherit}
     <div class="brand">IF LIFE</div>
     <div class="sub">人生は選べても、結果は選べない。</div>
     <div class="challenge">
-      <strong>☠ 平均寿命20歳。80歳まで生き残れる？</strong>
-      <small>超絶過酷人生の基準シミュレーションでは、80歳到達は約0.63%。選択肢も、その結果もランダム。</small>
+      <strong>☠ 平均寿命約21歳。80歳まで生き残れる？</strong>
+      <small>超絶過酷人生の基準シミュレーションでは、80歳到達は約1.2%。選択肢も、その結果もランダム。</small>
     </div>
   </div>
 
   <div class="stats">
-    <div class="stat"><small>超絶過酷 平均寿命</small><b>20.1歳</b></div>
-    <div class="stat"><small>80歳まで生存</small><b>0.63%</b></div>
-    <div class="stat"><small>100歳まで生存</small><b>0.10%</b></div>
+    <div class="stat"><small>超絶過酷 平均寿命</small><b>21.4歳</b></div>
+    <div class="stat"><small>80歳まで生存</small><b>1.17%</b></div>
+    <div class="stat"><small>100歳まで生存</small><b>0.13%</b></div>
   </div>
 
   <div class="howto">
@@ -263,6 +263,26 @@ var chaosDamage = {
   "重度のやけどを負った": [50,"全身こんがり焼けたが生きている。"]
 }
 
+var HARD_FATAL_RATE = 0.125;
+var HARD_DAMAGE_RATE = 0.30;
+
+function chaosCategory(msg){
+  if(fatalChaosOutcomes.has(msg)) return "fatal";
+  if(chaosDamage[msg]) return "damage";
+  return "safe";
+}
+
+function chooseHardChaosOutcome(event){
+  var pools={safe:[],damage:[],fatal:[]};
+  event[2].forEach(function(msg){pools[chaosCategory(msg)].push(msg);});
+  var r=Math.random();
+  var wanted=r<HARD_FATAL_RATE?"fatal":(r<HARD_FATAL_RATE+HARD_DAMAGE_RATE?"damage":"safe");
+  if(pools[wanted].length) return rnd(pools[wanted]);
+  if(pools.safe.length) return rnd(pools.safe);
+  if(pools.damage.length) return rnd(pools.damage);
+  return rnd(pools.fatal);
+}
+
 var normal = [
   ["進路を決める時期になった。",["大学へ進学","就職する","旅に出る","専門学校へ行く"]],
   ["友人から急に海外旅行へ誘われた。",["行く","断る","行き先だけ聞く"]],
@@ -345,9 +365,9 @@ function next(){
   var jump=s.age<5?Math.ceil(Math.random()*2):Math.ceil(Math.random()*5);
   s.age+=jump;
 
-  var deathBase;
+  var deathBase=0;
   if(s.mode==="hard"){
-    deathBase=s.age<5?.08:(s.age<10?.12:(s.age<20?.17:(s.age<30?.22:.15)));
+    deathBase=s.age>=70?Math.min(.02+(s.age-70)*.005,.30):0;
   }else if(s.mode==="random"){
     deathBase=s.age>80?.20:(s.age>60?.07:.013);
   }else{
@@ -357,7 +377,7 @@ function next(){
   if(chance(deathBase)){
     s.dead=true;
     s.life=0;
-    s.reason=s.mode==="hard"?rnd(hardDeaths):(s.mode==="win"?"珍しい不運が重なり人生を終えた":"寿命または不運により人生を終えた");
+    s.reason=s.mode==="hard"?"年齢とこれまでの無茶がついに限界を迎えた":(s.mode==="win"?"珍しい不運が重なり人生を終えた":"寿命または不運により人生を終えた");
     finish();
     return;
   }
@@ -396,10 +416,9 @@ function resolveChoice(c){
   var tone="neutral";
 
   if(s.current.length===3&&s.mode==="hard"&&chaos.indexOf(s.current)!==-1){
-    var o=s.current[2];
-    if(r<verybad){msg=o[2];tone="bad";}
-    else if(r<verybad+good){msg=o[0];tone="good";}
-    else{msg=o[1];tone=/長者|王|成功|救/.test(msg)?"good":"bad";}
+    msg=chooseHardChaosOutcome(s.current);
+    var cat=chaosCategory(msg);
+    tone=cat==="safe"?"good":"bad";
 
     if(fatalChaosOutcomes.has(msg)){
       s.life=0;
@@ -476,12 +495,12 @@ function render(){
 
 function topForAge(a){
   if(!s||s.mode!=="hard")return null;
-  if(a>=100)return .10;
-  if(a>=90)return .27;
-  if(a>=80)return .63;
-  if(a>=70)return 1.46;
-  if(a>=50)return 6.50;
-  if(a>=30)return 22.45;
+  if(a>=100)return .13;
+  if(a>=90)return .46;
+  if(a>=80)return 1.17;
+  if(a>=70)return 2.67;
+  if(a>=50)return 9.20;
+  if(a>=30)return 27.65;
   return Math.max(25,100-a*2.5);
 }
 
