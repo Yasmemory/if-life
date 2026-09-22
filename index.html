@@ -5,6 +5,10 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#090a0d">
 <title>IF LIFE | 人生は選べても、結果は選べない。</title>
+<script>
+window.va=window.va||function(){(window.vaq=window.vaq||[]).push(arguments);};
+</script>
+<script defer src="/_vercel/insights/script.js"></script>
 <style>
 :root{color-scheme:dark;font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif;--bg:#090a0d;--panel:#12141a;--line:#272c38;--muted:#969dac}
 *{box-sizing:border-box}
@@ -74,7 +78,7 @@ button{font:inherit}
 .actions button{padding:14px;border-radius:13px;border:0;font-weight:850;cursor:pointer}
 .primary{background:#fff;color:#111}
 .secondary{background:#181c25;color:#fff;border:1px solid #303746!important}
-.new-record{margin-top:8px;color:#f6d889;font-weight:900}.hard-only-hide{display:none!important}.challenge-ladder{margin:18px 0 8px;padding:16px;background:#101218;border:1px solid #282e3a;border-radius:18px}.challenge-ladder h3{margin:0 0 12px;font-size:.95rem;color:#c5cad5}.ladder{display:grid;grid-template-columns:repeat(5,1fr);gap:7px}.milestone{padding:10px 6px;text-align:center;border-radius:12px;border:1px solid #2b313d;background:#151820;color:#7f8797;font-size:.78rem}.milestone b{display:block;color:#c8ceda;font-size:1.03rem;margin-bottom:2px}.milestone.done{background:#12251a;border-color:#2d6645;color:#b9eac9}.milestone.done b{color:#e2ffeb}.milestone.current{border-color:#725d27;box-shadow:inset 0 0 0 1px #725d27;color:#f3dda2}.next-goal{margin-top:12px;font-size:.88rem;color:#aeb5c2;text-align:center}.achievement-list{display:grid;gap:8px;margin-top:14px}.achievement{padding:11px 12px;border-radius:12px;background:#11141a;border:1px solid #272c37;text-align:left;font-size:.9rem}.achievement.unlocked{border-color:#4f6633;background:#152016}.achievement strong{display:block;margin-bottom:2px}@media(max-width:700px){.ladder{grid-template-columns:repeat(5,minmax(55px,1fr));overflow-x:auto}}
+.new-record{margin-top:8px;color:#f6d889;font-weight:900}.hard-only-hide{display:none!important}.challenge-ladder{margin:18px 0 8px;padding:16px;background:#101218;border:1px solid #282e3a;border-radius:18px}.challenge-ladder h3{margin:0 0 12px;font-size:.95rem;color:#c5cad5}.ladder{display:grid;grid-template-columns:repeat(5,1fr);gap:7px}.milestone{padding:10px 6px;text-align:center;border-radius:12px;border:1px solid #2b313d;background:#151820;color:#7f8797;font-size:.78rem}.milestone b{display:block;color:#c8ceda;font-size:1.03rem;margin-bottom:2px}.milestone.done{background:#12251a;border-color:#2d6645;color:#b9eac9}.milestone.done b{color:#e2ffeb}.milestone.current{border-color:#725d27;box-shadow:inset 0 0 0 1px #725d27;color:#f3dda2}.next-goal{margin-top:12px;font-size:.88rem;color:#aeb5c2;text-align:center}.achievement-list{display:grid;gap:8px;margin-top:14px}.achievement{padding:11px 12px;border-radius:12px;background:#11141a;border:1px solid #272c37;text-align:left;font-size:.9rem}.achievement.unlocked{border-color:#4f6633;background:#152016}.achievement strong{display:block;margin-bottom:2px}.daily-box{margin:16px 0;padding:16px;border-radius:18px;background:linear-gradient(135deg,#152034,#181425);border:1px solid #34425b}.daily-box h3{margin:0 0 7px}.daily-box p{margin:0 0 12px;color:#aeb7c8;line-height:1.45}.daily-actions{display:flex;gap:8px;flex-wrap:wrap}.daily-actions button{padding:11px 13px;border-radius:12px;border:1px solid #3b4658;background:#1b2230;color:#fff;font-weight:800;cursor:pointer}.seed-chip{display:inline-block;margin-top:8px;padding:5px 9px;border-radius:999px;background:#0f131b;border:1px solid #2c3545;color:#8f9cb1;font-size:.76rem}.monetize-note{margin-top:14px;padding:12px;border-radius:13px;background:#101319;border:1px dashed #343c4b;color:#8f97a7;font-size:.82rem;line-height:1.5}.ad-slot{margin:14px 0;padding:18px;text-align:center;border-radius:14px;border:1px dashed #3a414f;background:#101219;color:#858d9d;font-size:.82rem}.premium-card{margin:18px 0;padding:16px;border-radius:18px;border:1px solid #4e4630;background:linear-gradient(135deg,#1e1b12,#17151a)}.premium-card h3{margin:0 0 7px}.premium-card p{margin:0 0 11px;color:#c6c0ad;line-height:1.45}.premium-card button{padding:11px 14px;border:0;border-radius:12px;font-weight:900;cursor:pointer}.daily-result{margin-top:8px;color:#b9c7e8;font-weight:800}.debug-metrics{margin:20px 0;padding:14px;border-radius:14px;background:#0d1015;border:1px solid #262c36;font-size:.78rem;color:#9aa3b2;white-space:pre-wrap}.hard-only-hide{display:none!important}@media(max-width:700px){.daily-actions{display:grid}.daily-actions button{width:100%}}@media(max-width:700px){.ladder{grid-template-columns:repeat(5,minmax(55px,1fr));overflow-x:auto}}
 @media(max-width:700px){
   .wrap{padding:14px 13px 36px}
   .hero{padding-top:28px}
@@ -113,6 +117,15 @@ button{font:inherit}
   </div>
 
   <div class="record" id="record"></div>
+  <div class="daily-box">
+    <h3>📅 今日の超絶過酷チャレンジ</h3>
+    <p>今日だけの同じSeedで全員が挑戦。友達と「何歳まで生きたか」を比べられます。</p>
+    <div class="daily-actions">
+      <button onclick="startDailyChallenge()">今日の人生を始める</button>
+      <button onclick="copyDailyChallengeUrl()">今日のURLをコピー</button>
+    </div>
+    <div class="seed-chip" id="dailySeedChip"></div>
+  </div>
   <div class="challenge-ladder" id="challengeLadder"></div>
 
   <div class="modes">
@@ -161,7 +174,7 @@ button{font:inherit}
     <div class="result-title" id="resultTitle"></div>
     <div class="big"><span id="deathAge"></span><small style="font-size:.32em;letter-spacing:0">歳</small></div>
     <div class="rank" id="rare"></div>
-    <div id="newRecord" class="new-record"></div>
+    <div id="newRecord" class="new-record"></div><div id="dailyResult" class="daily-result"></div>
     <div class="badge" id="badge"></div>
 
     <div class="summary">
@@ -173,19 +186,54 @@ button{font:inherit}
 
     <div class="achievement-list" id="achievementList"></div>
     <div class="death" id="deathReason"></div>
+    <div id="adSlot" class="ad-slot hidden">広告枠：広告サービス接続後、3人生ごとにここへ表示</div>
+    <div class="premium-card">
+      <h3>⭐ IF LIFE Premium</h3>
+      <p>広告なし・追加モード・過去ベスト詳細などを想定。決済接続までは準備中です。</p>
+      <button onclick="premiumInterest()">Premiumに興味がある</button>
+    </div>
 
     <div class="actions">
       <button class="primary" onclick="retry()">同じモードでもう一度</button>
       <button class="secondary" onclick="shareResult()">結果を共有</button>
-      <button class="secondary" onclick="copyResult()">シェア文をコピー</button>
+      <button class="secondary" onclick="copyResult()">シェア文をコピー</button><button class="secondary" onclick="copyThisRunUrl()">同じSeedを友達に送る</button>
       <button class="secondary" onclick="goHome()">別の人生を選ぶ</button>
     </div>
   </div>
 </section>
-</main>
-
-<script>
+<div id="debugMetrics" class="debug-metrics hidden"></div></main>\n\n<script>
 var s = null;
+var rngState = null;
+var MONETIZATION = {adsEnabled:false,premiumEnabled:false,adEvery:3};
+
+function hashSeed(str){
+  var h=2166136261>>>0;
+  str=String(str);
+  for(var i=0;i<str.length;i++){h^=str.charCodeAt(i);h=Math.imul(h,16777619);}
+  return h>>>0;
+}
+function setSeed(seed){rngState=seed?hashSeed(seed):null;}
+function randomValue(){
+  if(rngState===null)return Math.random();
+  rngState=(rngState+0x6D2B79F5)>>>0;
+  var t=rngState;
+  t=Math.imul(t^(t>>>15),t|1);
+  t^=t+Math.imul(t^(t>>>7),t|61);
+  return ((t^(t>>>14))>>>0)/4294967296;
+}
+function todaySeed(){
+  var d=new Date();
+  var y=d.getFullYear(),m=String(d.getMonth()+1).padStart(2,"0"),day=String(d.getDate()).padStart(2,"0");
+  return "DAILY-"+y+m+day;
+}
+function queryParams(){return new URLSearchParams(location.search);}
+function track(name,data){
+  data=data||{};
+  try{window.va("event",{name:name,data:data});}catch(e){}
+  var key="iflife_metric_"+name;
+  localStorage.setItem(key,String(Number(localStorage.getItem(key)||0)+1));
+}
+function metric(name){return Number(localStorage.getItem("iflife_metric_"+name)||0);}
 
 var names = {
   hard:"☠ 超絶過酷人生",
@@ -337,7 +385,7 @@ function chaosCategory(msg){
 function chooseHardChaosOutcome(event){
   var pools={safe:[],damage:[],fatal:[]};
   event[2].forEach(function(msg){pools[chaosCategory(msg)].push(msg);});
-  var r=Math.random();
+  var r=randomValue();
   var wanted=r<HARD_FATAL_RATE?"fatal":(r<HARD_FATAL_RATE+HARD_DAMAGE_RATE?"damage":"safe");
   if(pools[wanted].length) return rnd(pools[wanted]);
   if(pools.safe.length) return rnd(pools.safe);
@@ -411,6 +459,28 @@ function unlockedAchievements(age){
   return list;
 }
 
+function startDailyChallenge(){
+  var seed=todaySeed();
+  start("hard",seed,true);
+}
+function dailyUrl(){
+  var u=new URL(location.href);
+  u.search="";
+  u.searchParams.set("mode","hard");
+  u.searchParams.set("seed",todaySeed());
+  u.searchParams.set("daily","1");
+  return u.toString();
+}
+async function copyDailyChallengeUrl(){
+  var u=dailyUrl();
+  try{await navigator.clipboard.writeText(u);alert("今日のチャレンジURLをコピーしました");}
+  catch(e){prompt("コピーしてください",u);}
+  track("daily_share");
+}
+function hydrateDaily(){
+  var chip=document.getElementById("dailySeedChip");
+  if(chip)chip.textContent="Seed: "+todaySeed();
+}
 function updateRecord(){
   renderChallengeLadder();
   var e=document.getElementById("record");
@@ -423,34 +493,39 @@ function updateRecord(){
   }
 }
 
-function start(mode){
+function start(mode,seed,isDaily){
   var n=tries()+1;
   localStorage.setItem("iflife_tries",String(n));
+  var activeSeed=seed||("RUN-"+Date.now()+"-"+n);
+  setSeed(activeSeed);
   s={
     attempt:n,
     mode:mode,
     age:0,
-    money:mode==="win"?8000000:(mode==="hard"?0:Math.floor(Math.random()*1500000)),
+    money:mode==="win"?8000000:(mode==="hard"?0:Math.floor(randomValue()*1500000)),
     life:100,
     maxMoney:0,
     log:[],
     dead:false,
     count:0,
     locked:false,
-    recentEvents:[]
+    recentEvents:[],
+    seed:activeSeed,
+    daily:!!isDaily
   };
   document.getElementById("modeName").textContent=names[mode];
   document.getElementById("moneyPill").classList.toggle("hard-only-hide",mode==="hard");
   document.getElementById("moneySummary").classList.toggle("hard-only-hide",mode==="hard");
+  track("game_start",{mode:mode,daily:!!isDaily});
   show("game");
   next();
 }
 
 function goHome(){show("home");updateRecord();}
-function retry(){if(s)start(s.mode);}
-function rnd(a){return a[Math.floor(Math.random()*a.length)];}
-function chance(p){return Math.random()<p;}
-function shuffled(a){return a.slice().sort(function(){return Math.random()-.5;});}
+function retry(){if(s)start(s.mode,s.daily?s.seed:null,s.daily);}
+function rnd(a){return a[Math.floor(randomValue()*a.length)];}
+function chance(p){return randomValue()<p;}
+function shuffled(a){return a.slice().sort(function(){return randomValue()-.5;});}
 function pickEvent(pool){
   if(!s||!pool.length)return rnd(pool);
   var recent=s.recentEvents||[];
@@ -469,7 +544,7 @@ function next(){
   s.locked=false;
   document.getElementById("outcomeWrap").innerHTML="";
 
-  var jump=s.age<5?Math.ceil(Math.random()*2):Math.ceil(Math.random()*5);
+  var jump=s.age<5?Math.ceil(randomValue()*2):Math.ceil(randomValue()*5);
   s.age+=jump;
 
   var deathBase=0;
@@ -499,7 +574,7 @@ function next(){
   var choices=document.getElementById("choices");
   choices.innerHTML="";
 
-  shuffled(ev[1]).slice(0,Math.min(ev[1].length,Math.random()<.5?2:3)).forEach(function(c){
+  shuffled(ev[1]).slice(0,Math.min(ev[1].length,randomValue()<.5?2:3)).forEach(function(c){
     var b=document.createElement("button");
     b.className="choice";
     b.textContent=c;
@@ -518,7 +593,7 @@ function resolveChoice(c){
 
   var good=s.mode==="hard"?.15:(s.mode==="win"?.76:.47);
   var verybad=s.mode==="hard"?.40:(s.mode==="win"?.04:.15);
-  var r=Math.random();
+  var r=randomValue();
   var msg="";
   var tone="neutral";
 
@@ -549,7 +624,7 @@ function resolveChoice(c){
   }else{
     if(s.mode==="hard"){
       if(r<verybad){
-        var d=10+Math.floor(Math.random()*41);
+        var d=10+Math.floor(randomValue()*41);
         s.life=Math.max(0,s.life-d);
         msg=rnd(["完全に裏目に出た。","最悪のタイミングだった。","運がなさすぎた。"])+" ライフ-"+d+"。残りライフは"+Math.round(s.life)+"だ！";
         tone="bad";
@@ -562,17 +637,17 @@ function resolveChoice(c){
         tone="neutral";
       }
     }else if(r<verybad){
-      var loss=Math.floor(200000+Math.random()*3000000);
+      var loss=Math.floor(200000+randomValue()*3000000);
       s.money-=loss;
       msg=rnd(["完全に裏目に出た。","想像以上の大失敗になった。","判断が最悪の方向へ転んだ。"])+" 資産 "+fmt(-loss);
       tone="bad";
     }else if(r<verybad+good){
-      var gain=Math.floor(300000+Math.random()*(s.mode==="win"?18000000:7000000));
+      var gain=Math.floor(300000+randomValue()*(s.mode==="win"?18000000:7000000));
       s.money+=gain;
       msg=rnd(["予想外の大成功になった。","かなりうまくいった。","人生が良い方向へ転がった。"])+" 資産 +"+fmt(gain);
       tone="good";
     }else{
-      s.money+=Math.floor((Math.random()-.45)*900000);
+      s.money+=Math.floor((randomValue()-.45)*900000);
       msg=rnd(["特に大きな変化はなかった。","まあまあの結果だった。","思ったほど何も起きなかった。"]);
       tone="neutral";
     }
@@ -667,6 +742,12 @@ function finish(){
     ach.innerHTML="";
   }
 
+  var dailyResult=document.getElementById("dailyResult");
+  dailyResult.textContent=s.daily?("📅 今日のチャレンジ結果："+s.age+"歳 / Seed "+s.seed):"";
+  var ad=document.getElementById("adSlot");
+  var shouldAd=s.attempt%MONETIZATION.adEvery===0;
+  ad.classList.toggle("hidden",!shouldAd);
+  track("game_finish",{mode:s.mode,age:s.age,daily:s.daily});
   updateRecord();
 }
 
@@ -680,7 +761,21 @@ function shareText(){
   return text;
 }
 
+async function copyThisRunUrl(){
+  if(!s)return;
+  var u=new URL(location.href);u.search="";
+  u.searchParams.set("mode",s.mode);u.searchParams.set("seed",s.seed);
+  if(s.daily)u.searchParams.set("daily","1");
+  try{await navigator.clipboard.writeText(u.toString());alert("同じSeedのURLをコピーしました");}
+  catch(e){prompt("コピーしてください",u.toString());}
+  track("seed_share",{mode:s.mode});
+}
+function premiumInterest(){
+  track("premium_interest");
+  alert("Premiumは準備中です。正式版で広告非表示・追加モードなどを予定しています。");
+}
 async function shareResult(){
+  track("share_click",{mode:s.mode,age:s.age});
   var text=shareText();
   if(navigator.share){
     try{
@@ -701,8 +796,22 @@ async function copyResult(){
   }
 }
 
+function renderDebugMetrics(){
+  if(queryParams().get("debug")!=="1")return;
+  var e=document.getElementById("debugMetrics");e.classList.remove("hidden");
+  e.textContent="LOCAL METRICS\nstarts: "+metric("game_start")+"\nfinishes: "+metric("game_finish")+"\nshares: "+metric("share_click")+"\ndaily shares: "+metric("daily_share")+"\nseed shares: "+metric("seed_share")+"\npremium interest: "+metric("premium_interest");
+}
+function bootSharedRun(){
+  hydrateDaily();
+  var p=queryParams();
+  var seed=p.get("seed");
+  var mode=p.get("mode");
+  if(seed&&mode&&names[mode])start(mode,seed,p.get("daily")==="1");
+}
 updateRecord();
 renderChallengeLadder();
+bootSharedRun();
+renderDebugMetrics();
 </script>
 </body>
 </html>
