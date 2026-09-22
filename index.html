@@ -21,7 +21,7 @@ button{font:inherit}.mode{cursor:pointer;text-align:left;border:1px solid #2d334
 .choice:hover{background:#202633}.log{margin-top:16px;display:grid;gap:8px;max-height:280px;overflow:auto}.log div{padding:10px 12px;background:#101219;border-radius:12px;font-size:.92rem;opacity:.9}
 .result h2{font-size:2rem;margin-bottom:4px}.big{font-size:3rem;font-weight:900}.rare{font-size:1.15rem;font-weight:800;margin:10px 0}.actions{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-top:18px}
 .actions button{padding:14px;border-radius:13px;border:0;font-weight:800;cursor:pointer}.primary{background:#fff;color:#111}.secondary{background:#1a1e28;color:#fff;border:1px solid #31394a!important}
-@media(max-width:700px){.stats,.modes{grid-template-columns:1fr}.actions{grid-template-columns:1fr}.wrap{padding:16px}}
+.attempts{text-align:center;color:#8f96a6;font-size:.9rem;margin:4px 0 18px}.outcome{margin-top:14px;padding:14px 15px;border-radius:14px;font-weight:750;line-height:1.5}.outcome.good{background:#10271c;border:1px solid #285e40;color:#cbf5da}.outcome.bad{background:#2b1117;border:1px solid #6f2b3a;color:#ffd0d9}.outcome.neutral{background:#181b22;border:1px solid #343946;color:#e0e3ea}.continue{margin-top:10px;width:100%;padding:14px;border:0;border-radius:14px;background:#fff;color:#111;font-weight:900;cursor:pointer}.badge{display:inline-block;margin:8px 0 2px;border:1px solid #4a4054;border-radius:999px;padding:7px 12px;color:#e4d9eb;font-weight:800;font-size:.85rem}@media(max-width:700px){.stats,.modes{grid-template-columns:1fr}.actions{grid-template-columns:1fr}.wrap{padding:16px}}
 </style>
 </head>
 <body>
@@ -33,7 +33,7 @@ button{font:inherit}.mode{cursor:pointer;text-align:left;border:1px solid #2d334
   <div class="stat"><small>80歳まで生存</small><b>0.63%</b></div>
   <div class="stat"><small>資産1億円到達</small><b>0.40%</b></div>
  </div>
- <div class="modes">
+ <div class="attempts" id="attempts"></div>\n <div class="modes">
   <button class="mode hard" onclick="start('hard')"><h3>☠ 超絶過酷人生</h3><p>平均寿命約20歳。理不尽な世界でどこまで生き残れる？</p></button>
   <button class="mode random" onclick="start('random')"><h3>🎲 完全ランダム人生</h3><p>良いことも悪いことも、何が起きるか分からない。</p></button>
   <button class="mode win" onclick="start('win')"><h3>👑 超絶勝ち組人生</h3><p>恵まれた人生。それでも最後まで順調とは限らない。</p></button>
@@ -95,8 +95,8 @@ const normal=[
 ];
 function fmt(n){if(n>=1e8)return (n/1e8).toFixed(1)+"億円";if(n>=1e4)return Math.round(n/1e4)+"万円";return Math.round(n)+"円"}
 function show(id){["home","game","result"].forEach(x=>document.getElementById(x).classList.toggle("hidden",x!==id))}
-function start(mode){s={mode,age:0,money:mode==="win"?5000000:mode==="hard"?0:500000,health:100,happy:50,maxMoney:0,maxHappy:50,log:[],dead:false};document.getElementById("modeName").textContent=names[mode];show("game");next()}
-function goHome(){show("home")}
+function tries(){return Number(localStorage.getItem("iflife_tries")||0)}\nfunction updateAttempts(){const e=document.getElementById("attempts");if(e)e.textContent=tries()?("これまで "+tries()+" 人生をプレイ"):"最初の人生を始めよう"}\nfunction start(mode){const n=tries()+1;localStorage.setItem("iflife_tries",n);s={attempt:n,mode,age:0,money:mode==="win"?5000000:mode==="hard"?0:500000,health:100,happy:50,maxMoney:0,maxHappy:50,log:[],dead:false};document.getElementById("modeName").textContent=names[mode];show("game");next()}
+function goHome(){show("home");updateAttempts()}
 function retry(){start(s.mode)}
 function rnd(a){return a[Math.floor(Math.random()*a.length)]}
 function chance(p){return Math.random()<p}
@@ -125,7 +125,7 @@ function resolve(c){
    else{ s.money+=Math.floor((Math.random()-.35)*1200000);s.happy+=Math.floor((Math.random()-.5)*10);msg="まずまずの結果だった。"}
  }
  s.health=Math.max(0,Math.min(100,s.health));s.happy=Math.max(0,Math.min(100,s.happy));s.maxMoney=Math.max(s.maxMoney,s.money);s.maxHappy=Math.max(s.maxHappy,s.happy);
- s.log.unshift(s.age+"歳："+c+" → "+msg);if(s.health<=0){s.dead=true;s.reason="健康を失った"};render(); if(s.dead)finish(); else setTimeout(next,220);
+ s.log.unshift(s.age+"歳："+c+" → "+msg);if(s.health<=0){s.dead=true;s.reason="健康を失った"};render();\n const tone=/成功|良い|長者|王|100億|救われ/.test(msg)?"good":(/最悪|失った|重体|消滅|酸欠|つぶ|吸われ|壊滅/.test(msg)?"bad":"neutral");\n const ow=document.getElementById("outcomeWrap");if(ow)ow.innerHTML="<div class=\"outcome "+tone+"\">"+msg+"</div><button class=\"continue\" onclick=\""+(s.dead?"finish()":"next()")+"\">"+(s.dead?"人生の結果を見る":"次へ進む →")+"</button>";
 }
 function render(){document.getElementById("age").textContent=s.age;document.getElementById("money").textContent=fmt(s.money);document.getElementById("health").textContent=s.health;document.getElementById("happy").textContent=s.happy;document.getElementById("log").innerHTML=s.log.slice(0,12).map(x=>"<div>"+x+"</div>").join("")}
 function topForAge(a){if(s.mode!=="hard")return Math.max(.1,100-a);if(a>=100)return .10;if(a>=90)return .27;if(a>=80)return .65;if(a>=70)return 1.46;if(a>=50)return 6.5;if(a>=30)return 22.45;return Math.max(25,100-a*2.5)}
@@ -138,5 +138,5 @@ function finish(){
 function shareText(){return names[s.mode]+"をやったら"+s.age+"歳まで生きた。\n最大資産 "+fmt(s.maxMoney)+"\n"+(s.mode==="hard"?"生存上位 約"+topForAge(s.age).toFixed(2)+"%\n":"")+"人生は選べても、結果は選べない。\n#IFLIFE"}
 async function share(){if(navigator.share){try{return await navigator.share({title:"IF LIFE",text:shareText(),url:location.href})}catch(e){}}copyText()}
 async function copyText(){const t=shareText();try{await navigator.clipboard.writeText(t);alert("シェア文をコピーしました")}catch(e){prompt("コピーしてください",t)}}
-</script>
+updateAttempts();\n</script>
 </body></html>
