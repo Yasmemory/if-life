@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>IF LIFE</title>
+<style>
+:root{color-scheme:dark;font-family:system-ui,-apple-system,"Segoe UI",sans-serif}
+*{box-sizing:border-box} body{margin:0;background:#090a0d;color:#fff;min-height:100vh}
+.wrap{max-width:900px;margin:auto;padding:24px}.hero{text-align:center;padding:36px 0 20px}
+h1{font-size:clamp(40px,9vw,78px);margin:0}.sub{opacity:.72;margin-top:8px}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:20px 0}
+.stat,.card,.panel{background:#12141a;border:1px solid #252936;border-radius:18px;padding:18px}
+.stat b{display:block;font-size:1.35rem}.modes{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+button{font:inherit}.mode{cursor:pointer;text-align:left;border:1px solid #2d3342;background:#14171e;color:#fff;border-radius:18px;padding:20px;min-height:160px}
+.mode:hover{transform:translateY(-2px)}.mode h3{margin:0 0 8px}.hard{border-color:#6b2432}.win{border-color:#70591e}.random{border-color:#314f71}
+.hidden{display:none!important}.topbar{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:14px}
+.pills{display:flex;gap:8px;flex-wrap:wrap}.pill{background:#171b24;border:1px solid #2a3140;border-radius:999px;padding:8px 11px;font-size:.9rem}
+.event{font-size:1.3rem;line-height:1.55;margin:18px 0}.choices{display:grid;gap:10px}
+.choice{width:100%;text-align:left;padding:16px;border-radius:14px;border:1px solid #32394a;background:#181c25;color:#fff;cursor:pointer}
+.choice:hover{background:#202633}.log{margin-top:16px;display:grid;gap:8px;max-height:280px;overflow:auto}.log div{padding:10px 12px;background:#101219;border-radius:12px;font-size:.92rem;opacity:.9}
+.result h2{font-size:2rem;margin-bottom:4px}.big{font-size:3rem;font-weight:900}.rare{font-size:1.15rem;font-weight:800;margin:10px 0}.actions{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-top:18px}
+.actions button{padding:14px;border-radius:13px;border:0;font-weight:800;cursor:pointer}.primary{background:#fff;color:#111}.secondary{background:#1a1e28;color:#fff;border:1px solid #31394a!important}
+@media(max-width:700px){.stats,.modes{grid-template-columns:1fr}.actions{grid-template-columns:1fr}.wrap{padding:16px}}
+</style>
+</head>
+<body>
+<main class="wrap">
+<section id="home">
+ <div class="hero"><h1>IF LIFE</h1><div class="sub">人生は選べても、結果は選べない。</div></div>
+ <div class="stats">
+  <div class="stat"><small>超絶過酷 平均寿命</small><b>20.1歳</b></div>
+  <div class="stat"><small>80歳まで生存</small><b>0.63%</b></div>
+  <div class="stat"><small>資産1億円到達</small><b>0.40%</b></div>
+ </div>
+ <div class="modes">
+  <button class="mode hard" onclick="start('hard')"><h3>☠ 超絶過酷人生</h3><p>平均寿命約20歳。理不尽な世界でどこまで生き残れる？</p></button>
+  <button class="mode random" onclick="start('random')"><h3>🎲 完全ランダム人生</h3><p>良いことも悪いことも、何が起きるか分からない。</p></button>
+  <button class="mode win" onclick="start('win')"><h3>👑 超絶勝ち組人生</h3><p>恵まれた人生。それでも最後まで順調とは限らない。</p></button>
+ </div>
+</section>
+
+<section id="game" class="hidden">
+ <div class="topbar"><button class="secondary" onclick="goHome()">← 戻る</button><div id="modeName"></div></div>
+ <div class="pills">
+  <div class="pill">年齢 <b id="age">0</b>歳</div>
+  <div class="pill">資産 <b id="money">0円</b></div>
+  <div class="pill">健康 <b id="health">100</b></div>
+  <div class="pill">幸福 <b id="happy">50</b></div>
+ </div>
+ <div class="panel">
+  <div id="event" class="event"></div>
+  <div id="choices" class="choices"></div>
+ </div>
+ <div id="log" class="log"></div>
+</section>
+
+<section id="result" class="hidden result">
+ <div class="card">
+  <div id="resultMode"></div><h2>あなたの人生</h2>
+  <div class="big"><span id="deathAge"></span>歳</div>
+  <p>最大資産 <b id="maxMoney"></b></p>
+  <p>最高幸福度 <b id="maxHappy"></b></p>
+  <div class="rare" id="rare"></div>
+  <p id="deathReason"></p>
+  <div class="actions">
+    <button class="primary" onclick="retry()">もう一度この人生</button>
+    <button class="secondary" onclick="share()">共有する</button>
+    <button class="secondary" onclick="copyText()">シェア文をコピー</button>
+    <button class="secondary" onclick="goHome()">別のモードを選ぶ</button>
+  </div>
+ </div>
+</section>
+</main>
+<script>
+let s=null;
+const names={hard:"☠ 超絶過酷人生",random:"🎲 完全ランダム人生",win:"👑 超絶勝ち組人生"};
+const chaos=[
+ ["地球の重力が突然1億倍になった。",["全力で耐える","地下へ逃げる","受け入れる"],["奇跡的に一瞬で元に戻った","建物ごと潰された","あなたは押しつぶされた"]],
+ ["30mの巨大ハトが街に現れた。",["走って逃げる","パンを投げる","戦う"],["なぜか懐かれた","家を失った","巨大ハトについばまれた"]],
+ ["月が急接近している。",["避難する","空を見る","仕事へ行く"],["ぎりぎり逸れた","街が壊滅した","月との衝突で消滅した"]],
+ ["宇宙人が突然あなたを代表者に指名した。",["交渉する","逃げる","歓迎する"],["100億円相当の技術をもらった","地球外へ連れて行かれた","なぜか地球が救われた"]],
+ ["世界中の酸素濃度が半分になった。",["酸素を探す","家で待つ","走る"],["数日で元に戻った","重体になった","酸欠で倒れた"]],
+ ["人類が突然5cmになった。",["安全な場所を探す","猫から逃げる","冒険する"],["小さな文明を築いた","掃除機に吸われた","猫に追い回された"]]
+];
+const normal=[
+ ["進路を決める時期になった。",["大学へ進学","就職する","旅に出る"]],
+ ["友人から起業に誘われた。",["起業する","断る","副業で参加"]],
+ ["投資の話が舞い込んだ。",["投資する","見送る","少額だけ試す"]],
+ ["気になる人と出会った。",["話しかける","様子を見る","告白する"]],
+ ["転職の誘いが来た。",["転職する","残る","独立する"]],
+ ["健康診断で生活改善を勧められた。",["運動を始める","食生活を改善","何もしない"]],
+ ["突然SNSで投稿がバズった。",["発信を続ける","仕事に活かす","気にしない"]],
+ ["遠方への移住話が出た。",["移住する","断る","しばらく試す"]]
+];
+function fmt(n){if(n>=1e8)return (n/1e8).toFixed(1)+"億円";if(n>=1e4)return Math.round(n/1e4)+"万円";return Math.round(n)+"円"}
+function show(id){["home","game","result"].forEach(x=>document.getElementById(x).classList.toggle("hidden",x!==id))}
+function start(mode){s={mode,age:0,money:mode==="win"?5000000:mode==="hard"?0:500000,health:100,happy:50,maxMoney:0,maxHappy:50,log:[],dead:false};document.getElementById("modeName").textContent=names[mode];show("game");next()}
+function goHome(){show("home")}
+function retry(){start(s.mode)}
+function rnd(a){return a[Math.floor(Math.random()*a.length)]}
+function chance(p){return Math.random()<p}
+function next(){
+ if(s.dead)return finish();
+ let jump=s.age<6?Math.ceil(Math.random()*3):Math.ceil(Math.random()*6);s.age+=jump;
+ let deathBase=s.mode==="hard"?(s.age<10?.10:s.age<20?.15:s.age<30?.20:.12):s.mode==="random"?(s.age>75?.18:s.age>55?.06:.015):(s.age>85?.13:s.age>65?.035:.006);
+ if(s.health<30)deathBase+=.12;
+ if(chance(deathBase)){s.dead=true;s.reason=s.mode==="hard"?rnd(["突然の落雷に直撃された","謎の感染症で倒れた","道路が突然消滅した","自宅に隕石が落ちた","巨大ハトについばまれた"]):"人生を終えた";return finish()}
+ const ev=(s.mode==="hard"&&chance(.58))?rnd(chaos):rnd(normal);
+ s.current=ev;document.getElementById("event").textContent=s.age+"歳："+ev[0];
+ const choices=document.getElementById("choices");choices.innerHTML="";
+ ev[1].sort(()=>Math.random()-.5).slice(0,Math.ceil(2+Math.random()*2)).forEach(c=>{const b=document.createElement("button");b.className="choice";b.textContent=c;b.onclick=()=>resolve(c);choices.appendChild(b)});
+ render();
+}
+function resolve(c){
+ let good=s.mode==="hard"?.16:s.mode==="win"?.72:.46, verybad=s.mode==="hard"?.34:s.mode==="win"?.05:.14;
+ let r=Math.random(),msg="";
+ if(s.current.length===3&&s.mode==="hard"&&chaos.includes(s.current)){
+   const outcomes=s.current[2];msg=r<verybad?outcomes[2]:r<verybad+good?outcomes[0]:outcomes[1];
+   if(/消滅|つぶ|酸欠|吸われ/.test(msg)){s.dead=true;s.reason=msg}
+   else if(/100億/.test(msg))s.money+=1e10;else if(/重体|失った/.test(msg))s.health-=35;
+ }else{
+   if(r<verybad){s.money-=Math.floor(Math.random()*1800000);s.health-=Math.floor(Math.random()*25);s.happy-=Math.floor(Math.random()*18);msg="結果は最悪だった。"}
+   else if(r<verybad+good){s.money+=Math.floor(Math.random()*8000000);s.happy+=Math.floor(Math.random()*18);msg="思いがけず良い結果になった。"}
+   else{ s.money+=Math.floor((Math.random()-.35)*1200000);s.happy+=Math.floor((Math.random()-.5)*10);msg="まずまずの結果だった。"}
+ }
+ s.health=Math.max(0,Math.min(100,s.health));s.happy=Math.max(0,Math.min(100,s.happy));s.maxMoney=Math.max(s.maxMoney,s.money);s.maxHappy=Math.max(s.maxHappy,s.happy);
+ s.log.unshift(s.age+"歳："+c+" → "+msg);if(s.health<=0){s.dead=true;s.reason="健康を失った"};render(); if(s.dead)finish(); else setTimeout(next,220);
+}
+function render(){document.getElementById("age").textContent=s.age;document.getElementById("money").textContent=fmt(s.money);document.getElementById("health").textContent=s.health;document.getElementById("happy").textContent=s.happy;document.getElementById("log").innerHTML=s.log.slice(0,12).map(x=>"<div>"+x+"</div>").join("")}
+function topForAge(a){if(s.mode!=="hard")return Math.max(.1,100-a);if(a>=100)return .10;if(a>=90)return .27;if(a>=80)return .65;if(a>=70)return 1.46;if(a>=50)return 6.5;if(a>=30)return 22.45;return Math.max(25,100-a*2.5)}
+function finish(){
+ show("result");const top=topForAge(s.age);document.getElementById("resultMode").textContent=names[s.mode];document.getElementById("deathAge").textContent=s.age;
+ document.getElementById("maxMoney").textContent=fmt(s.maxMoney);document.getElementById("maxHappy").textContent=s.maxHappy;
+ document.getElementById("rare").textContent=s.mode==="hard"?"生存記録：上位 約"+top.toFixed(top<1?2:1)+"%":"この人生は毎回ランダム";
+ document.getElementById("deathReason").textContent="最期："+(s.reason||"寿命を迎えた");
+}
+function shareText(){return names[s.mode]+"をやったら"+s.age+"歳まで生きた。\n最大資産 "+fmt(s.maxMoney)+"\n"+(s.mode==="hard"?"生存上位 約"+topForAge(s.age).toFixed(2)+"%\n":"")+"人生は選べても、結果は選べない。\n#IFLIFE"}
+async function share(){if(navigator.share){try{return await navigator.share({title:"IF LIFE",text:shareText(),url:location.href})}catch(e){}}copyText()}
+async function copyText(){const t=shareText();try{await navigator.clipboard.writeText(t);alert("シェア文をコピーしました")}catch(e){prompt("コピーしてください",t)}}
+</script>
+</body></html>
